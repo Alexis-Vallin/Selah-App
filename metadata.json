@@ -1,0 +1,8 @@
+{
+  "name": "Selah",
+  "description": "A Christian accountability and Bible study app designed to connect believers for spiritual growth through community study and global fellowship.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
