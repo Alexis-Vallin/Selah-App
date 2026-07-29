@@ -28,6 +28,8 @@ import { STRUGGLES } from '../constants';
 import { generateScriptureOfTheDay } from '../services/geminiService';
 import { CommunityPost, StruggleType, UserProfile } from '../types';
 import { Button } from './Button';
+import { DiscussionsDropdown } from './Discussions-Dropdown';
+import { TagPillButton } from './Pill-Button';
 
 
 interface DashboardProps {
@@ -81,6 +83,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
 
   // Discussions state with rotating scripture & fellowship fallback streams
   const [selectedChannel, setSelectedChannel] = useState<string>('daily-verse');
+
+  // Focus Areas pill selection state
+  const focusAreas = ['Faith Doubts', 'Addiction', 'Relationships', 'Career Path', 'Parenting', 'Grief & Loss'];
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+
   const [channelPosts, setChannelPosts] = useState<Record<string, CommunityPost[]>>({
     'daily-verse': [
       { id: 'dv1', author: 'Pastor Mark', content: 'Welcome everyone! Today\'s passage calls us to trust completely in Him. What verse stood out to you in your morning reading?', timestamp: Date.now() - 3600000, likes: 14 },
@@ -384,25 +391,29 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
           </span>
         </div>
 
-        {/* Channel Selector Bar */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {channels.map((ch) => {
-            const isSelected = selectedChannel === ch.id;
-            return (
-              <button
-                key={ch.id}
-                onClick={() => setSelectedChannel(ch.id)}
-                className={`whitespace-nowrap text-xs px-3.5 py-2 rounded-xl font-bold transition-all shrink-0 flex items-center gap-1.5 ${isSelected
-                  ? 'bg-primary dark:bg-emerald-800 text-white shadow-xs'
-                  : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:border-gray-300'
-                  }`}
-              >
-                <Hash size={12} className={isSelected ? 'text-accent dark:text-emerald-300' : 'text-gray-400 dark:text-slate-500'} />
-                {ch.name}
-              </button>
-            );
-          })}
-        </div>
+        {/* TOP OF SCREEN*/}
+
+
+        <DiscussionsDropdown title="My Focus Areas" selectedCount={selectedTags.size}>
+          <div className="flex flex-wrap gap-2">
+            {focusAreas.map((label) => (
+              <TagPillButton
+                key={label}
+                label={label}
+                isSelected={selectedTags.has(label)}
+                onClick={() =>
+                  setSelectedTags((prev) => {
+                    const next = new Set(prev)
+                    next.has(label) ? next.delete(label) : next.add(label)
+                    return next
+                  })
+                }
+              />
+            ))}
+          </div>
+        </DiscussionsDropdown>
+
+
 
         {/* Channel Header Banner */}
         <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700/80 shadow-xs flex justify-between items-center">
@@ -461,6 +472,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
             <Send size={14} /> Send
           </button>
         </div>
+
+
+
+        {/* BOTTOM OF SCREEN */}
+
+
+
       </div>
     );
   };
