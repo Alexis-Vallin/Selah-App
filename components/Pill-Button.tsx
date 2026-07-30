@@ -1,4 +1,4 @@
-import { Button } from "@/components/ShadCN Components/button"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Hash } from "lucide-react"
 import React from "react"

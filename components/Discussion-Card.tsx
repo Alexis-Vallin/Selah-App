@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ShadCN Components/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 /**

@@ -4,7 +4,7 @@ import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from "@/components/ShadCN Components/collapsible"
+} from "@/components/ui/collapsible"
 import { cn } from "@/lib/utils"
 import { ChevronUp } from "lucide-react"
 import * as React from "react"
