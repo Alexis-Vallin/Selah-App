@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Edit2,
   Flame,
-  Hash,
   Heart,
   HelpCircle,
   Home,
@@ -18,7 +17,6 @@ import {
   Settings,
   ShieldCheck,
   Sun,
-  ThumbsUp,
   UserCircle,
   Users,
   X
@@ -28,6 +26,9 @@ import { STRUGGLES } from '../constants';
 import { generateScriptureOfTheDay } from '../services/geminiService';
 import { CommunityPost, StruggleType, UserProfile } from '../types';
 import { Button } from './Button';
+import { DiscussionCard } from './Discussion-Card';
+import { DiscussionsDropdown } from './Discussions-Dropdown';
+import { TagPillButton } from './Pill-Button';
 
 
 interface DashboardProps {
@@ -81,6 +82,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
 
   // Discussions state with rotating scripture & fellowship fallback streams
   const [selectedChannel, setSelectedChannel] = useState<string>('daily-verse');
+
+  // Focus Areas pill selection state
+  const focusAreas = ['Faith Doubts', 'Addiction', 'Relationships', 'Career Path', 'Parenting', 'Grief & Loss'];
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+
   const [channelPosts, setChannelPosts] = useState<Record<string, CommunityPost[]>>({
     'daily-verse': [
       { id: 'dv1', author: 'Pastor Mark', content: 'Welcome everyone! Today\'s passage calls us to trust completely in Him. What verse stood out to you in your morning reading?', timestamp: Date.now() - 3600000, likes: 14 },
@@ -373,7 +379,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     const currentPosts = channelPosts[selectedChannel] || channelPosts['general-fellowship'];
 
     return (
-      <div className="space-y-4 pb-24 animate-fade-in">
+      <div className="space-y-4 pb-6 animate-fade-in">
         <div className="border-b dark:border-slate-700 pb-3 flex justify-between items-center">
           <div>
             <h2 className="font-serif text-2xl text-primary dark:text-emerald-400 font-bold">Discussion Hub</h2>
@@ -384,83 +390,82 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
           </span>
         </div>
 
-        {/* Channel Selector Bar */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {channels.map((ch) => {
-            const isSelected = selectedChannel === ch.id;
-            return (
-              <button
-                key={ch.id}
-                onClick={() => setSelectedChannel(ch.id)}
-                className={`whitespace-nowrap text-xs px-3.5 py-2 rounded-xl font-bold transition-all shrink-0 flex items-center gap-1.5 ${isSelected
-                  ? 'bg-primary dark:bg-emerald-800 text-white shadow-xs'
-                  : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:border-gray-300'
-                  }`}
-              >
-                <Hash size={12} className={isSelected ? 'text-accent dark:text-emerald-300' : 'text-gray-400 dark:text-slate-500'} />
-                {ch.name}
-              </button>
-            );
-          })}
-        </div>
+        {/* TOP OF SCREEN*/}
 
-        {/* Channel Header Banner */}
-        <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700/80 shadow-xs flex justify-between items-center">
-          <div>
-            <h3 className="font-bold text-sm text-gray-800 dark:text-slate-100 flex items-center gap-1.5">
-              <Hash size={16} className="text-primary dark:text-emerald-400" />
-              {currentChannelObj.name}
-            </h3>
-            <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">Category: {currentChannelObj.category}</p>
+
+        <DiscussionsDropdown title="My Focus Areas" selectedCount={selectedTags.size}>
+          <div className="flex flex-wrap gap-2">
+            {focusAreas.map((label) => (
+              <TagPillButton
+                key={label}
+                label={label}
+                isSelected={selectedTags.has(label)}
+                onClick={() =>
+                  setSelectedTags((prev) => {
+                    const next = new Set(prev)
+                    next.has(label) ? next.delete(label) : next.add(label)
+                    return next
+                  })
+                }
+              />
+            ))}
           </div>
-          <span className="text-[11px] text-primary dark:text-emerald-400 bg-primary/5 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full font-semibold">Active</span>
-        </div>
+        </DiscussionsDropdown>
 
-        {/* Posts Stream */}
-        <div className="space-y-3 min-h-[35vh]">
-          {currentPosts.map((post) => (
-            <div key={post.id} className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700/80 shadow-xs space-y-2">
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-primary dark:text-emerald-400">{post.author}</span>
-                <span className="text-gray-400 dark:text-slate-500 text-[10px]">{new Date(post.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-              </div>
-              <p className="text-xs text-gray-700 dark:text-slate-200 leading-relaxed">{post.content}</p>
-              <div className="flex justify-end pt-1">
-                <button
-                  onClick={() => {
-                    setChannelPosts(prev => ({
-                      ...prev,
-                      [selectedChannel]: (prev[selectedChannel] || []).map(p =>
-                        p.id === post.id ? { ...p, likes: p.likes + 1 } : p
-                      )
-                    }));
-                  }}
-                  className="text-[11px] text-gray-500 dark:text-slate-400 hover:text-primary dark:hover:text-emerald-300 flex items-center gap-1 bg-cream dark:bg-slate-900 px-2.5 py-1 rounded-lg border dark:border-slate-700"
-                >
-                  <ThumbsUp size={12} /> {post.likes} Amen
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
 
-        {/* New Post Input */}
-        <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm flex gap-2">
-          <input
-            type="text"
-            value={newChannelPost}
-            onChange={(e) => setNewChannelPost(e.target.value)}
-            placeholder={`Message #${currentChannelObj.name}...`}
-            className="flex-1 text-xs p-2.5 bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-slate-100 rounded-lg outline-none border border-transparent focus:border-primary dark:focus:border-emerald-500"
-            onKeyDown={(e) => e.key === 'Enter' && handlePostToChannel()}
-          />
-          <button
-            onClick={handlePostToChannel}
-            className="bg-primary dark:bg-emerald-800 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary/90 transition-all flex items-center gap-1"
-          >
-            <Send size={14} /> Send
-          </button>
-        </div>
+
+
+        {/* EXPERIMENT - DiscussionCard component implementation */}
+
+        <DiscussionCard
+          verse="Proverbs 3:5-6"
+          tag="Career Path"
+          time="2m ago"
+          author="Alex Martinez"
+          snippet="'Trust in the Lord with all your heart and lean not on your own understanding.' — How do you actually surrender a career decision to God when every option feels uncertain and the pressure is on?"
+          onClick={() => alert('Navigating to Proverbs 3:5-6 discussion thread')}
+        />
+
+        <DiscussionCard
+          verse="Mark 9:24"
+          tag="Faith Doubts"
+          time="14m ago"
+          author="Jordan Lee"
+          snippet="'I believe; help my unbelief!' — Has anyone ever felt like this verse describes exactly where you are? How do you push through seasons of doubt without losing faith entirely?"
+          onClick={() => alert('Navigating to Mark 9:24 discussion thread')}
+        />
+
+        <DiscussionCard
+          verse="1 Corinthians 10:13"
+          tag="Addiction"
+          time="1h ago"
+          author="Marcus Webb"
+          snippet="'God will not let you be tempted beyond what you can bear.' — This verse has been my anchor this week. How have others used scripture as a practical tool in moments of intense craving or temptation?"
+          onClick={() => alert('Navigating to 1 Corinthians 10:13 discussion thread')}
+        />
+
+        <DiscussionCard
+          verse="Ephesians 4:2-3"
+          tag="Relationships"
+          time="3h ago"
+          author="Priya Nair"
+          snippet="'Bear with one another in love, making every effort to keep the unity of the Spirit.' — What does bearing with someone actually look like in a difficult marriage or friendship? Where's the line between patience and enabling?"
+          onClick={() => alert('Navigating to Ephesians 4:2-3 discussion thread')}
+        />
+
+
+        {/* END OF EXPERIMENT */}
+
+
+
+
+
+
+        {/*  */}
+        {/* BOTTOM OF SCREEN */}
+        {/*  */}
+
+
       </div>
     );
   };
