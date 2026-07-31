@@ -27,6 +27,7 @@ import React, { useEffect, useState } from 'react';
 import { STRUGGLES } from '../constants';
 import { generateScriptureOfTheDay } from '../services/geminiService';
 import { CommunityPost, StruggleType, UserProfile } from '../types';
+import { BibleStudy } from './BibleStudy';
 import { Button } from './Button';
 
 
@@ -93,18 +94,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     ]
   });
   const [newChannelPost, setNewChannelPost] = useState('');
-
-  // Group Capacity Modal State for Bible Study
-  const [selectedGroupModal, setSelectedGroupModal] = useState<{
-    id: string;
-    name: string;
-    leader: string;
-    members: string;
-    book: string;
-    isFull: boolean;
-  } | null>(null);
-
-  const [modalActionMessage, setModalActionMessage] = useState<string | null>(null);
 
   // Sync Dark Mode class with root document
   useEffect(() => {
@@ -465,124 +454,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     );
   };
 
-  // -- Render Tab 3: Bible Study --
-  const renderBibleStudy = () => {
-    const studyBook = user.bibleBook || 'General Fellowship';
-
-    const sampleGroups = [
-      { id: 'g104', name: `Group #104: Study on ${studyBook}`, leader: 'Pastor Mark', members: '11/12 members', isFull: true },
-      { id: 'g105', name: `Group #105: ${studyBook} Evening Walk`, leader: 'Rachel Stevens', members: '7/12 members', isFull: false },
-      { id: 'g106', name: `Group #106: Deep Dive into ${studyBook}`, leader: 'David Chen', members: '12/12 members', isFull: true }
-    ];
-
-    return (
-      <div className="space-y-5 pb-24 animate-fade-in">
-        <div>
-          <h2 className="font-serif text-2xl text-primary dark:text-emerald-400 font-bold">Bible Study Spaces</h2>
-          <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">Currently matching book: <strong className="text-primary dark:text-emerald-300">{studyBook}</strong></p>
-        </div>
-
-        {/* Action Toast Message */}
-        {modalActionMessage && (
-          <div className="bg-primary dark:bg-emerald-800 text-white p-3 rounded-xl text-xs font-semibold flex justify-between items-center shadow-md animate-fade-in">
-            <span>{modalActionMessage}</span>
-            <button onClick={() => setModalActionMessage(null)} className="hover:opacity-80">
-              <X size={16} />
-            </button>
-          </div>
-        )}
-
-        {/* Active Group List */}
-        <div className="space-y-4">
-          {sampleGroups.map((grp) => (
-            <div key={grp.id} className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-gray-100 dark:border-slate-700/80 shadow-xs space-y-3">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4 className="font-bold text-gray-800 dark:text-slate-100 text-sm flex items-center gap-1.5">
-                    <BookOpen size={16} className="text-primary dark:text-emerald-400" />
-                    {grp.name}
-                  </h4>
-                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Led by {grp.leader} • {grp.members}</p>
-                </div>
-                {grp.isFull ? (
-                  <span className="bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-300 text-[10px] px-2 py-0.5 rounded font-bold border border-red-200 dark:border-red-800">Capacity Hit</span>
-                ) : (
-                  <span className="bg-green-100 dark:bg-emerald-950 text-green-700 dark:text-emerald-300 text-[10px] px-2 py-0.5 rounded font-bold border border-green-200 dark:border-emerald-800">Open</span>
-                )}
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button
-                  onClick={() => {
-                    if (grp.isFull) {
-                      setSelectedGroupModal({
-                        id: grp.id,
-                        name: grp.name,
-                        leader: grp.leader,
-                        members: grp.members,
-                        book: studyBook,
-                        isFull: true
-                      });
-                    } else {
-                      setModalActionMessage(`Successfully joined ${grp.name}!`);
-                    }
-                  }}
-                  className="flex-1 py-2 bg-primary dark:bg-emerald-800 text-white text-xs font-bold rounded-lg hover:bg-primary/90 transition-all"
-                >
-                  {grp.isFull ? 'View Group Options' : 'Join Group'}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Modal for Group Capacities */}
-        {selectedGroupModal && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
-            <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-sm w-full space-y-4 border border-gray-100 dark:border-slate-700 shadow-xl">
-              <div className="flex justify-between items-center">
-                <h3 className="font-serif font-bold text-gray-800 dark:text-slate-100 text-lg">Group Capacity Hit</h3>
-                <button onClick={() => setSelectedGroupModal(null)} className="text-gray-400 dark:text-slate-500 hover:text-gray-600">
-                  <X size={20} />
-                </button>
-              </div>
-
-              <p className="text-xs text-gray-600 dark:text-slate-300 leading-relaxed">
-                <strong className="text-gray-800 dark:text-slate-100">{selectedGroupModal.name}</strong> has reached its ideal small-group size of 12 members to ensure everyone gets time to share.
-              </p>
-
-              <div className="bg-cream/70 dark:bg-slate-900/80 p-3 rounded-xl border border-gray-100 dark:border-slate-700 text-xs text-gray-700 dark:text-slate-300 space-y-1">
-                <div><strong>Book:</strong> {selectedGroupModal.book}</div>
-                <div><strong>Leader:</strong> {selectedGroupModal.leader}</div>
-              </div>
-
-              <div className="space-y-2 pt-2">
-                <button
-                  onClick={() => {
-                    setSelectedGroupModal(null);
-                    setModalActionMessage("Joined Group late! Welcome aboard.");
-                  }}
-                  className="w-full py-3 bg-primary dark:bg-emerald-800 text-white text-xs font-bold rounded-xl hover:bg-primary/90 transition-all"
-                >
-                  Join Late (Override capacity)
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedGroupModal(null);
-                    setModalActionMessage("Queued for the next fresh group starting in 3 days.");
-                  }}
-                  className="w-full py-3 border border-primary dark:border-emerald-600 text-primary dark:text-emerald-400 text-xs font-bold rounded-xl hover:bg-cream/50 dark:hover:bg-slate-700 transition-all"
-                >
-                  Wait for Next Group
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
   // -- Render Tab 4: Profile --
   const renderProfileMenu = () => {
     return (
@@ -803,7 +674,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       <div className="flex-1 p-6 overflow-y-auto">
         {activeTab === 'home' && renderHome()}
         {activeTab === 'discussions' && renderDiscussions()}
-        {activeTab === 'biblestudy' && renderBibleStudy()}
+        {activeTab === 'biblestudy' && <BibleStudy user={user} />}
         {activeTab === 'profile' && (
           <>
             {profileView === 'menu' && renderProfileMenu()}
