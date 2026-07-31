@@ -26,9 +26,145 @@ import { STRUGGLES } from '../constants';
 import { generateScriptureOfTheDay } from '../services/geminiService';
 import { CommunityPost, StruggleType, UserProfile } from '../types';
 import { Button } from './Button';
-import { DiscussionCard } from './Discussion-Card';
+import { ChatThread } from './ChatThread';
+import { DiscussionCard, type Discussion, type Message as DiscussionMessage } from './Discussion-Card';
 import { DiscussionsDropdown } from './Discussions-Dropdown';
 import { TagPillButton } from './Pill-Button';
+
+/* ─────────────────────────────────────────────
+   Seed discussion data — full Discussion objects
+   with pre-populated message threads.
+   ───────────────────────────────────────────── */
+const SEED_DISCUSSIONS: Discussion[] = [
+  {
+    id: 'proverbs-3-5',
+    verse: 'Proverbs 3:5-6',
+    tag: 'Career Path',
+    time: '2m ago',
+    author: 'Alex Martinez',
+    snippet:
+      "'Trust in the Lord with all your heart and lean not on your own understanding.' — How do you actually surrender a career decision to God when every option feels uncertain and the pressure is on?",
+    messages: [
+      {
+        id: 'proverbs-3-5-m1',
+        author: 'Alex Martinez',
+        text: "Trust in the Lord with all your heart and lean not on your own understanding. How do you actually surrender a career decision to God when every option feels uncertain?",
+        time: '2m ago',
+        isOwn: false,
+      },
+      {
+        id: 'proverbs-3-5-m2',
+        author: 'Sarah J.',
+        text: "I've been sitting with this verse all week. For me it came down to journaling every option and then praying, 'Lord, close the doors that aren't from You.'",
+        time: '1m ago',
+        isOwn: false,
+      },
+      {
+        id: 'proverbs-3-5-m3',
+        author: 'David K.',
+        text: "Proverbs 16:9 pairs well with this — 'A man's heart plans his way, but the Lord directs his steps.' Sometimes you just have to start walking.",
+        time: '45s ago',
+        isOwn: false,
+      },
+    ],
+  },
+  {
+    id: 'mark-9-24',
+    verse: 'Mark 9:24',
+    tag: 'Faith Doubts',
+    time: '14m ago',
+    author: 'Jordan Lee',
+    snippet:
+      "'I believe; help my unbelief!' — Has anyone ever felt like this verse describes exactly where you are? How do you push through seasons of doubt without losing faith entirely?",
+    messages: [
+      {
+        id: 'mark-9-24-m1',
+        author: 'Jordan Lee',
+        text: "I believe; help my unbelief! Has anyone ever felt like this verse describes exactly where you are spiritually?",
+        time: '14m ago',
+        isOwn: false,
+      },
+      {
+        id: 'mark-9-24-m2',
+        author: 'Pastor Mark',
+        text: "Jordan, thank you for your honesty. Doubt is not the opposite of faith — it can be the very thing that deepens it. The father in Mark 9 brought his doubt TO Jesus, not away from Him.",
+        time: '12m ago',
+        isOwn: false,
+      },
+      {
+        id: 'mark-9-24-m3',
+        author: 'Grace M.',
+        text: "Reading through Psalms really helped me. David questioned God openly and it strengthened his faith. You're in good company.",
+        time: '8m ago',
+        isOwn: false,
+      },
+    ],
+  },
+  {
+    id: '1-cor-10-13',
+    verse: '1 Corinthians 10:13',
+    tag: 'Addiction',
+    time: '1h ago',
+    author: 'Marcus Webb',
+    snippet:
+      "'God will not let you be tempted beyond what you can bear.' — This verse has been my anchor this week. How have others used scripture as a practical tool in moments of intense craving or temptation?",
+    messages: [
+      {
+        id: '1-cor-10-13-m1',
+        author: 'Marcus Webb',
+        text: "God will not let you be tempted beyond what you can bear. This verse has been my anchor this week. How have others used scripture practically in moments of temptation?",
+        time: '1h ago',
+        isOwn: false,
+      },
+      {
+        id: '1-cor-10-13-m2',
+        author: 'Brother Thomas',
+        text: "I write key verses on index cards and keep them in my wallet. When the craving hits, I pull one out and read it aloud. Something about hearing the Word out loud breaks the cycle.",
+        time: '52m ago',
+        isOwn: false,
+      },
+      {
+        id: '1-cor-10-13-m3',
+        author: 'Rachel S.',
+        text: "James 4:7 — 'Submit yourselves to God. Resist the devil, and he will flee from you.' I pair that with this verse. The promise is that there IS a way out every time.",
+        time: '40m ago',
+        isOwn: false,
+      },
+    ],
+  },
+  {
+    id: 'eph-4-2-3',
+    verse: 'Ephesians 4:2-3',
+    tag: 'Relationships',
+    time: '3h ago',
+    author: 'Priya Nair',
+    snippet:
+      "'Bear with one another in love, making every effort to keep the unity of the Spirit.' — What does bearing with someone actually look like in a difficult marriage or friendship? Where's the line between patience and enabling?",
+    messages: [
+      {
+        id: 'eph-4-2-3-m1',
+        author: 'Priya Nair',
+        text: "Bear with one another in love, making every effort to keep the unity of the Spirit. What does bearing with someone actually look like in a difficult marriage or friendship?",
+        time: '3h ago',
+        isOwn: false,
+      },
+      {
+        id: 'eph-4-2-3-m2',
+        author: 'David K.',
+        text: "I think bearing with someone means choosing to stay at the table even when it's uncomfortable — but it doesn't mean accepting harmful behavior. Boundaries are biblical too.",
+        time: '2h ago',
+        isOwn: false,
+      },
+      {
+        id: 'eph-4-2-3-m3',
+        author: 'Sarah J.',
+        text: "Colossians 3:13 adds to this: 'Forgive as the Lord forgave you.' It doesn't say the relationship has to look the same after — just that bitterness can't be the anchor.",
+        time: '1h ago',
+        isOwn: false,
+      },
+    ],
+  },
+];
 
 
 interface DashboardProps {
@@ -86,6 +222,33 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
   // Focus Areas pill selection state
   const focusAreas = ['Faith Doubts', 'Addiction', 'Relationships', 'Career Path', 'Parenting', 'Grief & Loss'];
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+
+  // ── Discussion → ChatThread state ──
+  const [openDiscussion, setOpenDiscussion] = useState<Discussion | null>(null);
+  const [messagesByDiscussion, setMessagesByDiscussion] = useState<
+    Record<string, DiscussionMessage[]>
+  >({});
+
+  /** Get the current messages for a discussion (user-sent + seed). */
+  const getMessages = (d: Discussion): DiscussionMessage[] =>
+    messagesByDiscussion[d.id] ?? d.messages;
+
+  /** Append a user-sent message to a discussion thread. */
+  const sendDiscussionMessage = (discussionId: string, text: string) => {
+    const discussion = SEED_DISCUSSIONS.find((d) => d.id === discussionId);
+    if (!discussion) return;
+    const newMsg: DiscussionMessage = {
+      id: `${discussionId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      author: user.name || 'You',
+      text,
+      time: 'Just now',
+      isOwn: true,
+    };
+    setMessagesByDiscussion((prev) => ({
+      ...prev,
+      [discussionId]: [...(prev[discussionId] ?? discussion.messages), newMsg],
+    }));
+  };
 
   const [channelPosts, setChannelPosts] = useState<Record<string, CommunityPost[]>>({
     'daily-verse': [
@@ -378,6 +541,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     const currentChannelObj = channels.find(c => c.id === selectedChannel) || channels[0];
     const currentPosts = channelPosts[selectedChannel] || channelPosts['general-fellowship'];
 
+    // ── If a discussion is open, show the ChatThread instead of the feed ──
+    if (openDiscussion) {
+      return (
+        <ChatThread
+          discussion={openDiscussion}
+          messages={getMessages(openDiscussion)}
+          user={user}
+          onBack={() => setOpenDiscussion(null)}
+          onSendMessage={(text) => sendDiscussionMessage(openDiscussion.id, text)}
+        />
+      );
+    }
+
     return (
       <div className="space-y-4 pb-6 animate-fade-in">
         <div className="border-b dark:border-slate-700 pb-3 flex justify-between items-center">
@@ -413,52 +589,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
         </DiscussionsDropdown>
 
 
-
-
-        {/* EXPERIMENT - DiscussionCard component implementation */}
-
-        <DiscussionCard
-          verse="Proverbs 3:5-6"
-          tag="Career Path"
-          time="2m ago"
-          author="Alex Martinez"
-          snippet="'Trust in the Lord with all your heart and lean not on your own understanding.' — How do you actually surrender a career decision to God when every option feels uncertain and the pressure is on?"
-          onClick={() => alert('Navigating to Proverbs 3:5-6 discussion thread')}
-        />
-
-        <DiscussionCard
-          verse="Mark 9:24"
-          tag="Faith Doubts"
-          time="14m ago"
-          author="Jordan Lee"
-          snippet="'I believe; help my unbelief!' — Has anyone ever felt like this verse describes exactly where you are? How do you push through seasons of doubt without losing faith entirely?"
-          onClick={() => alert('Navigating to Mark 9:24 discussion thread')}
-        />
-
-        <DiscussionCard
-          verse="1 Corinthians 10:13"
-          tag="Addiction"
-          time="1h ago"
-          author="Marcus Webb"
-          snippet="'God will not let you be tempted beyond what you can bear.' — This verse has been my anchor this week. How have others used scripture as a practical tool in moments of intense craving or temptation?"
-          onClick={() => alert('Navigating to 1 Corinthians 10:13 discussion thread')}
-        />
-
-        <DiscussionCard
-          verse="Ephesians 4:2-3"
-          tag="Relationships"
-          time="3h ago"
-          author="Priya Nair"
-          snippet="'Bear with one another in love, making every effort to keep the unity of the Spirit.' — What does bearing with someone actually look like in a difficult marriage or friendship? Where's the line between patience and enabling?"
-          onClick={() => alert('Navigating to Ephesians 4:2-3 discussion thread')}
-        />
-
-
-        {/* END OF EXPERIMENT */}
-
-
-
-
+        {/* Discussion cards wired to ChatThread */}
+        {SEED_DISCUSSIONS.map((d) => (
+          <DiscussionCard
+            key={d.id}
+            verse={d.verse}
+            tag={d.tag}
+            time={d.time}
+            author={d.author}
+            snippet={d.snippet}
+            onClick={() => setOpenDiscussion(d)}
+          />
+        ))}
 
 
         {/*  */}
@@ -805,7 +947,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
 
   return (
     <div className="min-h-screen bg-cream dark:bg-slate-900 max-w-md mx-auto relative flex flex-col transition-colors duration-300">
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className={`flex-1 ${openDiscussion && activeTab === 'discussions' ? 'p-0 overflow-hidden' : 'p-6 overflow-y-auto'}`}>
         {activeTab === 'home' && renderHome()}
         {activeTab === 'discussions' && renderDiscussions()}
         {activeTab === 'biblestudy' && renderBibleStudy()}
