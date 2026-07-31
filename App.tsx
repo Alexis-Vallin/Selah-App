@@ -73,6 +73,7 @@ export default function App() {
         </div>
       ) : status === UserStatus.DASHBOARD && user ? (
         <Dashboard user={user} setUser={setUser as React.Dispatch<React.SetStateAction<UserProfile>>} onLogout={handleLogout} />
+
       ) : (
         <Onboarding onComplete={handleOnboardingComplete} />
       )}
