@@ -25,6 +25,7 @@ import React, { useEffect, useState } from 'react';
 import { STRUGGLES } from '../constants';
 import { generateScriptureOfTheDay } from '../services/geminiService';
 import { CommunityPost, StruggleType, UserProfile } from '../types';
+import { BibleStudy } from './BibleStudy';
 import { Button } from './Button';
 import { DiscussionCard } from './Discussion-Card';
 import { DiscussionsDropdown } from './Discussions-Dropdown';
@@ -808,7 +809,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       <div className="flex-1 p-6 overflow-y-auto">
         {activeTab === 'home' && renderHome()}
         {activeTab === 'discussions' && renderDiscussions()}
-        {activeTab === 'biblestudy' && renderBibleStudy()}
+        {activeTab === 'biblestudy' && <BibleStudy user={user} />}
         {activeTab === 'profile' && (
           <>
             {profileView === 'menu' && renderProfileMenu()}
