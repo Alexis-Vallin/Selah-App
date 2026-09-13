@@ -113,15 +113,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
   const renderWelcome = () => (
     <div className={`flex flex-col items-center justify-center h-full text-center space-y-8 transition-all duration-1000 transform ${isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-      <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center text-white mb-2 shadow-xl animate-pulse">
-        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M10 2h4a2 2 0 0 1 2 2v18" />
-          <path d="M10 2a2 2 0 0 0-2 2" />
-        </svg>
-      </div>
+      <img src="/logo.png" alt="Selah" className="w-64 h-auto mb-2 rounded-2xl" />
       
       <div className="space-y-3">
-        <h1 className="font-serif text-4xl text-primary font-bold tracking-tight">Selah</h1>
         <div className="space-y-1 bg-white/60 p-3.5 rounded-2xl border border-primary/10 shadow-xs max-w-sm mx-auto">
           <p className="font-serif italic text-secondary text-base md:text-lg leading-snug">
             "Spurring one another on in faith and community."
@@ -232,7 +226,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         </div>
 
         {/* Brief encouraging note */}
-        <div className="bg-sky/20 border border-sky/40 rounded-xl p-3.5 text-xs text-gray-700 leading-relaxed">
+        <div className="bg-taupe/20 border border-taupe/40 rounded-xl p-3.5 text-xs text-gray-700 leading-relaxed">
           Skipping is completely fine, but sharing helps us tailor your home stats and community boards to what you need most!
         </div>
 
@@ -299,7 +293,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         </div>
 
         {/* Info Banner */}
-        <div className="bg-sky/20 border border-sky/40 rounded-xl p-4 text-xs text-gray-800 flex items-start gap-3">
+        <div className="bg-taupe/20 border border-taupe/40 rounded-xl p-4 text-xs text-gray-800 flex items-start gap-3">
           <Info size={18} className="text-primary shrink-0 mt-0.5" />
           <p className="leading-relaxed">
             <strong className="text-primary font-semibold">Why we ask this:</strong> We ask this so we can seamlessly pair you with an intimate, peer-led Bible study group covering that specific book!

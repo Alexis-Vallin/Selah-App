@@ -41,21 +41,6 @@ interface DashboardProps {
 type Tab = 'home' | 'discussions' | 'biblestudy' | 'profile';
 type ProfileView = 'menu' | 'edit-profile' | 'struggles' | 'interests' | 'prayers' | 'notifications' | 'account' | 'help' | 'logout';
 
-// Minimalist Pastoral Staff / Shepherd's Crook Icon Component
-const ShepherdStaffIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6 text-primary dark:text-emerald-400" }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.3"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    {/* Clean Shepherd Crook curved handle at top descending to straight staff */}
-    <path d="M12 21V9a4 4 0 1 1 8 0v2" />
-  </svg>
-);
 
 export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState<Tab>('home');
@@ -207,7 +192,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
         <div className="flex justify-between items-center pt-1">
           <div className="flex items-center gap-2.5">
             <div className="p-2 bg-primary/10 dark:bg-emerald-950/60 rounded-xl flex items-center justify-center border border-primary/15 dark:border-emerald-800/50">
-              <ShepherdStaffIcon className="w-6 h-6 text-primary dark:text-emerald-400" />
+              <img src="/logo.png" alt="Selah" className="w-10 h-10 object-cover rounded-lg" />
             </div>
             <div>
               <h1 className="font-serif text-lg font-bold text-primary dark:text-emerald-400 leading-tight">
