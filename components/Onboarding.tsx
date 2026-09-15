@@ -95,6 +95,17 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     }
   };
 
+  const renderBackButton = () => (
+    <button
+      type="button"
+      onClick={() => setStep(prev => prev - 1)}
+      aria-label="Go back"
+      className="absolute top-6 left-6 p-2 rounded-full hover:bg-gray-100 text-gray-800"
+    >
+      <ArrowLeft size={20} />
+    </button>
+  );
+
   const renderWelcome = () => (
     <div className={`flex flex-col items-center justify-center h-full text-center space-y-8 transition-all duration-1000 transform ${isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
       <img src="/logo.png" alt="Selah" className="w-64 h-auto mb-2 rounded-2xl" />
@@ -175,7 +186,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
       <Button 
         disabled={isSignInMode ? (!data.email || !password) : (!data.name || !data.email || !password)} 
-        onClick={handleAccountSubmit}
+        onClick={() => setStep(prev => prev + 1)}
       >
         {isSignInMode ? 'Log In' : 'Continue'}
       </Button>
