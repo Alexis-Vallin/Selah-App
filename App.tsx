@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Dashboard } from './components/Dashboard';
 import { Onboarding } from './components/Onboarding';
-import { UserProfile, UserStatus } from './types';
+import { StruggleType, UserProfile, UserStatus } from './types';
 
 const LOADING_PHRASES = [
   "Gathering your flock...",
@@ -19,6 +19,8 @@ export default function App() {
 
   const handleOnboardingComplete = (profile: UserProfile) => {
     setUser(profile);
+    localStorage.setItem('selah_user_name', profile.name);
+    localStorage.setItem('selah_user_location', profile.location || '');
     setStatus(UserStatus.MATCHING);
     setPhraseIndex(0);
   };
@@ -54,6 +56,59 @@ export default function App() {
       };
     }
   }, [status]);
+
+  // Hydrate user from localStorage on mount so saved profile edits persist across reloads
+  useEffect(() => {
+    const savedName = localStorage.getItem('selah_user_name');
+    if (!savedName) return;
+
+    const savedLocation = localStorage.getItem('selah_user_location') || '';
+
+    let savedStruggles: StruggleType[] = [];
+    try {
+      const raw = localStorage.getItem('selah_user_struggles');
+      if (raw) savedStruggles = JSON.parse(raw);
+    } catch {
+      savedStruggles = [];
+    }
+
+    let savedInterests: string[] = [];
+    try {
+      const raw = localStorage.getItem('selah_user_interests');
+      if (raw) savedInterests = JSON.parse(raw);
+    } catch {
+      savedInterests = [];
+    }
+
+    setUser({
+      name: savedName,
+      email: '',
+      profilePicture: '',
+      bio: '',
+      struggles: savedStruggles,
+      specificStruggle: '',
+      connectionPreference: 'both',
+      availability: [],
+      prayerRequest: '',
+      bibleBook: null,
+      bibleStudyGroupId: null,
+      streak: 1,
+      lastCheckIn: null,
+      notificationsEnabled: false,
+      notificationTime: 'Morning',
+      notifyOnBuddyMessage: true,
+      notifyOnCommunityPost: true,
+      shareGrowthStats: false,
+      defaultAnonymousPrayer: false,
+      moodHistory: [],
+      gratitudeHistory: [],
+      completedLessons: [],
+      biblicalInterests: savedInterests,
+      location: savedLocation,
+      wantsGroupMatch: true
+    });
+    setStatus(UserStatus.DASHBOARD);
+  }, []);
 
   return (
     <>

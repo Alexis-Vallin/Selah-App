@@ -11,6 +11,7 @@ import {
   HelpCircle,
   Home,
   LogOut,
+  MapPin,
   MessageCircle,
   Moon,
   Plus,
@@ -26,7 +27,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { STRUGGLES } from '../constants';
 import { generateScriptureOfTheDay } from '../services/geminiService';
-import { CommunityPost, StruggleType, UserProfile } from '../types';
+import { CommunityPost, PrayerEntry, StruggleType, UserProfile } from '../types';
 import { BibleStudy } from './BibleStudy';
 import { Button } from './Button';
 
@@ -38,23 +39,7 @@ interface DashboardProps {
 }
 
 type Tab = 'home' | 'discussions' | 'biblestudy' | 'profile';
-type ProfileView = 'menu' | 'edit-profile' | 'struggles' | 'interests' | 'prayers' | 'notifications' | 'account' | 'help' | 'logout';
-
-// Minimalist Pastoral Staff / Shepherd's Crook Icon Component
-const ShepherdStaffIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6 text-primary dark:text-emerald-400" }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.3"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    {/* Clean Shepherd Crook curved handle at top descending to straight staff */}
-    <path d="M12 21V9a4 4 0 1 1 8 0v2" />
-  </svg>
-);
+type ProfileView = 'menu' | 'edit-profile' | 'location' | 'struggles' | 'interests' | 'prayers' | 'notifications' | 'account' | 'help' | 'logout';
 
 export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState<Tab>('home');
@@ -79,6 +64,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
   const [userPrayerText, setUserPrayerText] = useState('');
   const [postAnonymously, setPostAnonymously] = useState(true);
   const [prayerSubmittedNotice, setPrayerSubmittedNotice] = useState<string | null>(null);
+
+  // User's personal prayer journal — persisted to localStorage
+  const [userPrayers, setUserPrayers] = useState<PrayerEntry[]>(() => {
+    try {
+      const stored = localStorage.getItem('selah_user_prayers');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
 
   // Discussions state with rotating scripture & fellowship fallback streams
   const [selectedChannel, setSelectedChannel] = useState<string>('daily-verse');
@@ -131,10 +126,51 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
 
   const handleUserPrayerSubmit = () => {
     if (!userPrayerText.trim()) return;
-    setPrayerSubmittedNotice("Your prayer request has been submitted to the fellowship stream. May God bless you!");
+    const newPrayer: PrayerEntry = {
+      id: Date.now().toString(),
+      content: userPrayerText.trim(),
+      timestamp: Date.now(),
+      anonymous: postAnonymously,
+      answered: false,
+      archived: false
+    };
+    const updated = [newPrayer, ...userPrayers];
+    setUserPrayers(updated);
+    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
+    setPrayerSubmittedNotice("Your prayer request has been saved to your prayer journal. May God bless you!");
     setUserPrayerText('');
     setShowSubmitPrayer(false);
     setTimeout(() => setPrayerSubmittedNotice(null), 5000);
+  };
+
+  const togglePrayerAnswered = (id: string) => {
+    const updated = userPrayers.map(p =>
+      p.id === id ? { ...p, answered: !p.answered } : p
+    );
+    setUserPrayers(updated);
+    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
+  };
+
+  const archivePrayer = (id: string) => {
+    const updated = userPrayers.map(p =>
+      p.id === id ? { ...p, archived: true } : p
+    );
+    setUserPrayers(updated);
+    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
+  };
+
+  const deletePrayer = (id: string) => {
+    const updated = userPrayers.filter(p => p.id !== id);
+    setUserPrayers(updated);
+    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
+  };
+
+  const restorePrayer = (id: string) => {
+    const updated = userPrayers.map(p =>
+      p.id === id ? { ...p, archived: false } : p
+    );
+    setUserPrayers(updated);
+    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
   };
 
   const handlePostToChannel = () => {
@@ -157,6 +193,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     setUser(prev => ({ ...prev, [key]: value }));
   };
 
+  // Persist editable profile fields to localStorage so they survive reloads
+  // and can be hydrated by App.tsx on next mount.
+  const persistUserEdits = (updates: Partial<UserProfile>) => {
+    if (updates.name !== undefined) {
+      localStorage.setItem('selah_user_name', updates.name);
+    }
+    if (updates.location !== undefined) {
+      localStorage.setItem('selah_user_location', updates.location || '');
+    }
+    if (updates.struggles !== undefined) {
+      localStorage.setItem('selah_user_struggles', JSON.stringify(updates.struggles));
+    }
+    if (updates.biblicalInterests !== undefined) {
+      localStorage.setItem('selah_user_interests', JSON.stringify(updates.biblicalInterests));
+    }
+  };
+
   // Derive channels list with automatic fallback to General Fellowship
   const userStrugglesList = user.struggles || [];
   const userInterestsList = user.biblicalInterests || [];
@@ -164,11 +217,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
   const channels = [
     { id: 'daily-verse', name: '📌 Daily Scripture Reflections', category: 'Global' },
     { id: 'general-fellowship', name: 'General Fellowship', category: 'Global' },
-    ...userStrugglesList.map(s => ({
+    ...(user.wantsGroupMatch ? userStrugglesList.map(s => ({
       id: `struggle-${s.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
       name: s === StruggleType.OTHER && user.specificStruggle ? `Specialized Lounge: ${user.specificStruggle.slice(0, 18)}...` : `Focus: ${s}`,
-      category: 'My Focus Areas'
-    })),
+      category: 'Discussion Focus Areas'
+    })) : []),
     ...userInterestsList.map(bi => ({
       id: `interest-${bi.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
       name: `Interest: ${bi}`,
@@ -200,8 +253,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
         {/* Header: Minimalist Staff Icon + User Greeting */}
         <div className="flex justify-between items-center pt-1">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-primary/10 dark:bg-emerald-950/60 rounded-xl flex items-center justify-center border border-primary/15 dark:border-emerald-800/50">
-              <ShepherdStaffIcon className="w-6 h-6 text-primary dark:text-emerald-400" />
+            <div className="p-1.5 bg-primary/10 dark:bg-emerald-950/60 rounded-xl flex items-center justify-center border border-primary/15 dark:border-emerald-800/50">
+              <img src="/logo.png" alt="Selah" className="w-8 h-8 rounded-lg object-cover" />
             </div>
             <div>
               <h1 className="font-serif text-lg font-bold text-primary dark:text-emerald-400 leading-tight">
@@ -267,9 +320,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
               <Heart className="text-primary dark:text-emerald-400" size={18} />
               <h3 className="font-serif font-bold text-gray-800 dark:text-slate-100 text-sm">Prayer Request of the Day</h3>
             </div>
-            <span className="text-[10px] uppercase font-bold text-primary dark:text-emerald-300 bg-primary/10 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full">
-              Featured Need
-            </span>
           </div>
 
           {/* Card Body with Country Tag and Content (Strictly No Comment Thread) */}
@@ -294,8 +344,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
               >
                 <Heart size={16} className={dailyPrayer.hasPrayed ? 'fill-white text-white' : 'text-primary dark:text-emerald-400'} />
                 {dailyPrayer.hasPrayed
-                  ? `Prayed (Thank you!) (${dailyPrayer.prayedCount})`
-                  : `🙏 I Prayed For This (${dailyPrayer.prayedCount})`
+                  ? `Prayed (Thank you!)`
+                  : `🙏 I Prayed For This`
                 }
               </button>
             </div>
@@ -484,7 +534,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
           <h3 className="font-serif font-bold text-xs uppercase tracking-wide text-primary dark:text-emerald-400">Active Memberships</h3>
           <div className="text-xs text-gray-700 dark:text-slate-300 space-y-1">
             <div><strong>Bible Study:</strong> {user.bibleBook || 'General Fellowship'} Group</div>
-            <div><strong>Focus Areas:</strong> {(user.struggles && user.struggles.length > 0) ? user.struggles.join(', ') : 'General Fellowship'}</div>
+            <div><strong>Discussion Focus Areas:</strong> {(user.struggles && user.struggles.length > 0) ? user.struggles.join(', ') : 'General Fellowship'}</div>
             <div><strong>Interests:</strong> {(user.biblicalInterests && user.biblicalInterests.length > 0) ? user.biblicalInterests.join(', ') : 'General Bible Reflection'}</div>
           </div>
         </div>
@@ -511,7 +561,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
         {/* Menu Items */}
         <div className="space-y-2.5">
           <MenuCard icon={Edit2} title="Edit Profile" subtitle="Update name, bio, and photo" onClick={() => setProfileView('edit-profile')} />
-          <MenuCard icon={MessageCircle} title="My Focus Areas" subtitle="Update struggles & prayer needs" onClick={() => setProfileView('struggles')} />
+          <MenuCard icon={MapPin} title="Location" subtitle="Update where you're joining us from" onClick={() => setProfileView('location')} />
+          <MenuCard icon={MessageCircle} title="Discussion Focus Areas" subtitle="Update discussion topics & prayer needs" onClick={() => setProfileView('struggles')} />
+          <MenuCard icon={Heart} title="My Prayers" subtitle="Your prayer journal & answered prayers" onClick={() => setProfileView('prayers')} />
           <MenuCard icon={BookOpen} title="Biblical Interests" subtitle="Update topics & study preferences" onClick={() => setProfileView('interests')} />
           <MenuCard icon={Bell} title="Notifications" subtitle="Manage reminders & alerts" onClick={() => setProfileView('notifications')} />
           <MenuCard icon={Settings} title="Account Settings" subtitle="Email, security, privacy" onClick={() => setProfileView('account')} />
@@ -529,6 +581,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     const handleSave = () => {
       updateProfile('name', name);
       updateProfile('bio', bio);
+      persistUserEdits({ name });
       setProfileView('menu');
     };
 
@@ -565,6 +618,43 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     );
   };
 
+  const renderLocationEdit = () => {
+    const [localLocation, setLocalLocation] = useState(user.location || '');
+
+    const handleSave = () => {
+      updateProfile('location', localLocation);
+      persistUserEdits({ location: localLocation });
+      setProfileView('menu');
+    };
+
+    return (
+      <div className="space-y-6 pb-24 animate-fade-in">
+        <div className="flex items-center gap-2 mb-4">
+          <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700"><ArrowLeft size={20} className="text-gray-800 dark:text-slate-200" /></button>
+          <h2 className="font-serif text-xl text-primary dark:text-emerald-400 font-bold">Location</h2>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1">City / Country</label>
+            <input
+              value={localLocation}
+              onChange={e => setLocalLocation(e.target.value)}
+              placeholder="e.g., London, UK"
+              className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 outline-none focus:border-primary"
+            />
+          </div>
+          <p className="text-[11px] text-gray-500 dark:text-slate-400 leading-relaxed">This helps us connect you with local prayer groups and events.</p>
+        </div>
+
+        <div className="flex gap-3 pt-2">
+          <Button variant="outline" onClick={() => setProfileView('menu')}>Cancel</Button>
+          <Button onClick={handleSave}>Save Location</Button>
+        </div>
+      </div>
+    );
+  };
+
   const renderStrugglesEdit = () => {
     const [localStruggles, setLocalStruggles] = useState(user.struggles || []);
 
@@ -577,7 +667,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       <div className="space-y-6 pb-24 animate-fade-in">
         <div className="flex items-center gap-2 mb-4">
           <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700"><ArrowLeft size={20} className="text-gray-800 dark:text-slate-200" /></button>
-          <h2 className="font-serif text-xl text-primary dark:text-emerald-400 font-bold">Focus Areas & Struggles</h2>
+          <h2 className="font-serif text-xl text-primary dark:text-emerald-400 font-bold">Discussion Focus Areas</h2>
         </div>
 
         <div className="space-y-2">
@@ -598,23 +688,46 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
             );
           })}
         </div>
-        <Button onClick={() => { updateProfile('struggles', localStruggles); setProfileView('menu'); }}>Save Focus Areas</Button>
+        <Button onClick={() => { updateProfile('struggles', localStruggles); persistUserEdits({ struggles: localStruggles }); setProfileView('menu'); }}>Save Focus Areas</Button>
       </div>
     );
   };
 
   const renderInterestsEdit = () => {
     const [localInterests, setLocalInterests] = useState(user.biblicalInterests || []);
+    const [customInterest, setCustomInterest] = useState('');
 
     const toggle = (interest: string) => {
       if (localInterests.includes(interest)) setLocalInterests(localInterests.filter(i => i !== interest));
       else setLocalInterests([...localInterests, interest]);
     };
 
+    const addCustomInterest = () => {
+      const trimmed = customInterest.trim();
+      if (trimmed && !localInterests.includes(trimmed)) {
+        setLocalInterests([...localInterests, trimmed]);
+        setCustomInterest('');
+      }
+    };
+
+    const removeInterest = (interest: string) => {
+      setLocalInterests(localInterests.filter(i => i !== interest));
+    };
+
     const options = [
-      'Apologetics', 'Marriage & Family', 'Faith & Mental Health',
-      'Deep Theology', 'Daily Devotionals', 'Christian Leadership', 'Other'
+      'Apologetics',
+      'Prayer Life',
+      'Marriage & Family',
+      'Identity in Christ',
+      'Faith & Mental Health',
+      'Biblical Interpretation',
+      'Deep Theology',
+      'Daily Devotionals',
+      'Christian Leadership',
+      'Other'
     ];
+
+    const customInterestsList = localInterests.filter(i => !options.includes(i));
 
     return (
       <div className="space-y-6 pb-24 animate-fade-in">
@@ -640,7 +753,158 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
             );
           })}
         </div>
-        <Button onClick={() => { updateProfile('biblicalInterests', localInterests); setProfileView('menu'); }}>Save Interests</Button>
+
+        {/* Custom Interest Input */}
+        <div className="space-y-2 pt-2">
+          <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1">Add Custom Interest</label>
+          <div className="flex gap-2">
+            <input
+              value={customInterest}
+              onChange={e => setCustomInterest(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') addCustomInterest(); }}
+              placeholder="e.g., Worship Music, Church History"
+              className="flex-1 p-3 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 outline-none focus:border-primary"
+            />
+            <Button onClick={addCustomInterest}>Add</Button>
+          </div>
+        </div>
+
+        {/* Custom Interests as Removable Chips */}
+        {customInterestsList.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-2">
+            {customInterestsList.map(interest => (
+              <span key={interest} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 dark:bg-emerald-950/60 text-primary dark:text-emerald-300 rounded-full text-xs font-medium">
+                {interest}
+                <button onClick={() => removeInterest(interest)} className="hover:text-red-500 dark:hover:text-red-400 transition-colors">
+                  <X size={12} />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        <Button onClick={() => { updateProfile('biblicalInterests', localInterests); persistUserEdits({ biblicalInterests: localInterests }); setProfileView('menu'); }}>Save Interests</Button>
+      </div>
+    );
+  };
+
+  const renderPrayers = () => {
+    const activePrayers = userPrayers.filter(p => !p.archived);
+    const archivedPrayers = userPrayers.filter(p => p.archived);
+
+    const formatDate = (timestamp: number) => {
+      const date = new Date(timestamp);
+      const now = new Date();
+      const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+      if (diffDays === 0) return 'Today';
+      if (diffDays === 1) return 'Yesterday';
+      if (diffDays < 7) return `${diffDays} days ago`;
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    };
+
+    const PrayerCard = ({ prayer }: { prayer: PrayerEntry }) => (
+      <div className={`bg-white dark:bg-slate-800 p-4 rounded-xl border shadow-xs space-y-3 ${
+        prayer.answered
+          ? 'border-primary/40 dark:border-emerald-700/60 bg-primary/5 dark:bg-emerald-950/30'
+          : 'border-gray-100 dark:border-slate-700/80'
+      }`}>
+        <p className="font-serif text-sm italic text-gray-800 dark:text-slate-200 leading-relaxed">
+          "{prayer.content}"
+        </p>
+        <div className="flex justify-between items-center text-[11px] text-gray-500 dark:text-slate-400">
+          <div className="flex items-center gap-2">
+            <span>{formatDate(prayer.timestamp)}</span>
+            {prayer.anonymous && (
+              <span className="px-2 py-0.5 bg-gray-100 dark:bg-slate-700 rounded-full text-[10px] font-medium">
+                Anonymous
+              </span>
+            )}
+            {prayer.answered && (
+              <span className="px-2 py-0.5 bg-primary/15 dark:bg-emerald-900/60 text-primary dark:text-emerald-300 rounded-full text-[10px] font-bold flex items-center gap-1">
+                <Check size={10} /> Answered
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => togglePrayerAnswered(prayer.id)}
+              className={`p-1.5 rounded-lg transition-colors ${
+                prayer.answered
+                  ? 'bg-primary/10 dark:bg-emerald-900/60 text-primary dark:text-emerald-300'
+                  : 'text-gray-400 dark:text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-primary'
+              }`}
+              title={prayer.answered ? 'Mark as not answered' : 'Mark as answered'}
+            >
+              <Check size={14} />
+            </button>
+            {prayer.archived ? (
+              <button
+                onClick={() => restorePrayer(prayer.id)}
+                className="p-1.5 rounded-lg text-gray-400 dark:text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-primary"
+                title="Restore prayer"
+              >
+                <Plus size={14} />
+              </button>
+            ) : (
+              <button
+                onClick={() => archivePrayer(prayer.id)}
+                className="p-1.5 rounded-lg text-gray-400 dark:text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-secondary"
+                title="Archive prayer"
+              >
+                <Hash size={14} />
+              </button>
+            )}
+            <button
+              onClick={() => deletePrayer(prayer.id)}
+              className="p-1.5 rounded-lg text-gray-400 dark:text-slate-500 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-500"
+              title="Delete prayer"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+
+    return (
+      <div className="space-y-6 pb-24 animate-fade-in">
+        <div className="flex items-center gap-2 mb-4">
+          <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700"><ArrowLeft size={20} className="text-gray-800 dark:text-slate-200" /></button>
+          <h2 className="font-serif text-xl text-primary dark:text-emerald-400 font-bold">My Prayers</h2>
+        </div>
+
+        {activePrayers.length === 0 && archivedPrayers.length === 0 ? (
+          <div className="bg-white dark:bg-slate-800 p-8 rounded-xl border border-gray-100 dark:border-slate-700/80 text-center space-y-3">
+            <Heart size={32} className="text-gray-300 dark:text-slate-600 mx-auto" />
+            <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">
+              You haven't submitted any prayers yet. Share what's on your heart from the Home tab.
+            </p>
+          </div>
+        ) : (
+          <>
+            {activePrayers.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-slate-400">
+                  Active Prayers ({activePrayers.length})
+                </h3>
+                {activePrayers.map(prayer => (
+                  <PrayerCard key={prayer.id} prayer={prayer} />
+                ))}
+              </div>
+            )}
+
+            {archivedPrayers.length > 0 && (
+              <div className="space-y-3 pt-4">
+                <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-slate-400">
+                  Archived ({archivedPrayers.length})
+                </h3>
+                {archivedPrayers.map(prayer => (
+                  <PrayerCard key={prayer.id} prayer={prayer} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     );
   };
@@ -679,8 +943,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
           <>
             {profileView === 'menu' && renderProfileMenu()}
             {profileView === 'edit-profile' && renderEditProfile()}
+            {profileView === 'location' && renderLocationEdit()}
             {profileView === 'struggles' && renderStrugglesEdit()}
             {profileView === 'interests' && renderInterestsEdit()}
+            {profileView === 'prayers' && renderPrayers()}
             {profileView === 'notifications' && renderNotificationsSettings()}
             {profileView === 'account' && (
               <div className="space-y-4 pb-24">

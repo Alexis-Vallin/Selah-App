@@ -10,8 +10,11 @@ interface OnboardingProps {
 
 const BIBLICAL_INTERESTS_OPTIONS = [
   'Apologetics',
+  'Prayer Life',
   'Marriage & Family',
+  'Identity in Christ',
   'Faith & Mental Health',
+  'Biblical Interpretation',
   'Deep Theology',
   'Daily Devotionals',
   'Christian Leadership',
@@ -30,6 +33,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     email: '',
     profilePicture: '',
     bio: '',
+    location: '',
     struggles: [],
     specificStruggle: '',
     connectionPreference: 'both',
@@ -48,7 +52,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     moodHistory: [],
     gratitudeHistory: [],
     completedLessons: [],
-    biblicalInterests: []
+    biblicalInterests: [],
+    wantsGroupMatch: true
   });
   const [password, setPassword] = useState('');
 
@@ -207,6 +212,45 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     </div>
   );
 
+  const renderLocation = () => (
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h2 className="font-serif text-2xl text-primary font-bold">Where are you joining us from?</h2>
+        <p className="text-xs text-gray-500 mt-1">This helps us connect you with local prayer groups and events.</p>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">City / Country</label>
+          <input
+            type="text"
+            value={data.location || ''}
+            onChange={(e) => updateData('location', e.target.value)}
+            placeholder="e.g., London, UK"
+            className="w-full p-4 rounded-xl border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white text-sm"
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-between items-center pt-2">
+        <button
+          onClick={() => {
+            updateData('location', ''); // Clear location if skipped
+            setStep(3);
+          }}
+          className="text-xs font-bold text-gray-500 hover:text-primary underline px-2 py-1"
+        >
+          Skip
+        </button>
+        <Button
+          onClick={() => setStep(3)}
+        >
+          Continue
+        </Button>
+      </div>
+    </div>
+  );
+
   const renderStruggles = () => {
     const isOtherSelected = data.struggles.includes(StruggleType.OTHER);
 
@@ -214,16 +258,30 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
       <div className="space-y-5 animate-fade-in">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="font-serif text-2xl text-primary font-bold">Community Focus Areas</h2>
+            <h2 className="font-serif text-2xl text-primary font-bold">Discussion Focus Areas</h2>
             <p className="text-gray-600 text-xs mt-1">What areas are you looking for prayer or peer discussions on?</p>
           </div>
           <button
-            onClick={() => setStep(3)}
+            onClick={() => onComplete(data)}
             className="text-xs font-bold text-gray-500 hover:text-primary underline px-2 py-1"
           >
             Skip
           </button>
         </div>
+
+        {/* Group Matching Opt-in Toggle */}
+        <label className="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-gray-100 cursor-pointer text-xs text-gray-700 hover:bg-cream/40 transition-colors">
+          <input
+            type="checkbox"
+            checked={data.wantsGroupMatch}
+            onChange={(e) => updateData('wantsGroupMatch', e.target.checked)}
+            className="w-4 h-4 mt-0.5 text-primary rounded border-gray-300 focus:ring-primary accent-primary"
+          />
+          <div>
+            <span className="font-semibold block text-gray-800">Yes, find me a group based on my focus areas</span>
+            <span className="text-[11px] text-gray-500 leading-relaxed block mt-0.5">If unchecked, you can still select focus areas, but we won't automatically match you into a discussion group.</span>
+          </div>
+        </label>
 
         {/* Brief encouraging note */}
         <div className="bg-taupe/20 border border-taupe/40 rounded-xl p-3.5 text-xs text-gray-700 leading-relaxed">
@@ -265,7 +323,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         )}
 
         <div className="flex gap-2 pt-1">
-          <Button onClick={() => setStep(3)}>
+          <Button onClick={() => onComplete(data)}>
             Continue
           </Button>
         </div>
@@ -276,20 +334,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   const renderBibleBook = () => {
     return (
       <div className="space-y-5 animate-fade-in">
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="font-serif text-2xl text-primary font-bold">Bible Study Matching</h2>
-            <p className="text-gray-600 text-xs mt-1">Select what you are currently reading or studying.</p>
-          </div>
-          <button
-            onClick={() => {
-              updateData('bibleBook', 'None / General Fellowship');
-              setStep(4);
-            }}
-            className="text-xs font-bold text-gray-500 hover:text-primary underline px-2 py-1"
-          >
-            Skip
-          </button>
+        <div className="flex flex-col items-start">
+          <h2 className="font-serif text-2xl text-primary font-bold">Bible Study Matching</h2>
+          <p className="text-gray-600 text-xs mt-1">Select what you are currently reading or studying.</p>
         </div>
 
         {/* Info Banner */}
@@ -336,9 +383,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         </div>
 
         <Button
-          disabled={!data.bibleBook && !noBookOptOut}
-          onClick={() => setStep(4)}
-        >
+        disabled={!data.bibleBook && !noBookOptOut}
+        onClick={() => setStep(4)}
+      >
           Continue
         </Button>
       </div>
@@ -351,17 +398,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
     return (
       <div className="space-y-5 animate-fade-in">
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="font-serif text-2xl text-primary font-bold">Biblical Interests</h2>
-            <p className="text-gray-600 text-xs mt-1">What are your current biblical interests?</p>
-          </div>
-          <button
-            onClick={() => onComplete(data)}
-            className="text-xs font-bold text-gray-500 hover:text-primary underline px-2 py-1"
-          >
-            Skip
-          </button>
+        <div className="flex flex-col items-start">
+          <h2 className="font-serif text-2xl text-primary font-bold">Biblical Interests</h2>
+          <p className="text-gray-600 text-xs mt-1">What are your current biblical interests?</p>
         </div>
 
         {/* Tag Grid */}
@@ -403,9 +442,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         )}
 
         <Button
-          disabled={selectedInterests.length === 0}
-          onClick={() => onComplete(data)}
-        >
+        disabled={selectedInterests.length === 0}
+        onClick={() => setStep(5)}
+      >
           Enter Fellowship
         </Button>
       </div>
@@ -417,13 +456,14 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
       <div className="flex-1 flex flex-col justify-center">
         {step === 0 && renderWelcome()}
         {step === 1 && renderAccount()}
-        {step === 2 && renderStruggles()}
+        {step === 2 && renderLocation()}
         {step === 3 && renderBibleBook()}
         {step === 4 && renderBiblicalInterests()}
+        {step === 5 && renderStruggles()}
       </div>
       {step > 0 && (
         <div className="py-6 flex justify-center space-x-2">
-          {[1, 2, 3, 4].map(i => (
+          {[1, 2, 3, 4, 5].map(i => (
             <div
               key={i}
               className={`h-1.5 rounded-full transition-all duration-300 ${

@@ -1,0 +1,1 @@
+export const generateScriptureOfTheDay = async () => ({ verseText: 'stub', reference: 'stub' });

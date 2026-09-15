@@ -37,7 +37,7 @@ export const BIBLE_BOOKS = [...OLD_TESTAMENT_BOOKS, ...NEW_TESTAMENT_BOOKS];
 export const MOCK_BUDDY = {
   name: "David",
   avatarUrl: "https://picsum.photos/100/100",
-  sharedStruggle: "Prayer Life",
+  sharedStruggle: "Anxiety & Worry",
   prayerRequest: "My grandmother is going through surgery this week. Please pray for peace and healing."
 };
 
@@ -62,7 +62,7 @@ export const MOCK_LESSONS: Lesson[] = [
   { id: '1', title: 'The Heart of Prayer', description: 'Understanding why we pray and how God listens.', duration: '5 min', completed: true },
   { id: '2', title: 'Walking in the Spirit', description: 'What does it mean to be led by the Spirit daily?', duration: '8 min', completed: false },
   { id: '3', title: 'Dealing with Doubt', description: 'It is okay to ask questions. Lets look at Thomas.', duration: '6 min', completed: false },
-  { id: '4', title: 'Identity in Christ', description: 'You are who He says you are.', duration: '10 min', completed: false },
+  { id: '4', title: 'Biblical Interpretation Basics', description: 'Unlock deeper understanding of scripture.', duration: '10 min', completed: false },
 ];
 
 export const MOCK_FLOCK_POSTS: FlockPost[] = [

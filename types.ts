@@ -12,9 +12,6 @@ export enum StruggleType {
   LONELINESS = 'Loneliness',
   ACADEMIC = 'Academic Pressure',
   ADDICTION = 'Addiction',
-  IDENTITY = 'Identity in Christ',
-  PRAYER = 'Prayer Life',
-  BIBLE = 'Bible Understanding',
   OTHER = 'Other'
 }
 
@@ -48,6 +45,7 @@ export interface UserProfile {
   email?: string; // Mock auth
   profilePicture?: string;
   bio?: string;
+  location?: string;
   struggles: StruggleType[];
   specificStruggle: string;
   connectionPreference: 'buddy' | 'community' | 'both';
@@ -72,6 +70,7 @@ export interface UserProfile {
   gratitudeHistory: GratitudeEntry[];
   completedLessons: string[]; // IDs of completed lessons
   biblicalInterests?: string[];
+  wantsGroupMatch: boolean;
 }
 
 export interface Message {
@@ -110,4 +109,13 @@ export interface Buddy {
   avatarUrl: string;
   sharedStruggle: string;
   prayerRequest: string;
+}
+
+export interface PrayerEntry {
+  id: string;
+  content: string;
+  timestamp: number;
+  anonymous: boolean;
+  answered: boolean;
+  archived: boolean;
 }
