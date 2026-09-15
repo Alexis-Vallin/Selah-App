@@ -343,13 +343,13 @@ var Dashboard = ({ user, setUser, onLogout }) => {
       category: "Biblical Interests"
     }))
   ];
-  const MenuCard = ({ icon: Icon, title, subtitle, onClick, isDanger }) => /* @__PURE__ */ jsxs("button", { onClick, className: "w-full bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xs border border-gray-100 dark:border-slate-700/80 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition", children: [
-    /* @__PURE__ */ jsx("div", { className: `p-2 rounded-full ${isDanger ? "bg-red-50 dark:bg-red-950/50 text-red-500" : "bg-primary/5 dark:bg-emerald-950/60 text-primary dark:text-emerald-400"}`, children: /* @__PURE__ */ jsx(Icon, { size: 22 }) }),
+  const MenuCard = ({ icon: Icon, title, subtitle, onClick, isDanger }) => /* @__PURE__ */ jsxs("button", { onClick, className: "w-full bg-white dark:bg-stone-900 p-4 rounded-xl shadow-xs border border-gray-100 dark:border-stone-700/80 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-stone-800/50 transition", children: [
+    /* @__PURE__ */ jsx("div", { className: `p-2 rounded-full ${isDanger ? "bg-red-50 dark:bg-red-950/50 text-red-500" : "bg-primary/5 dark:bg-warm-amber/10 text-primary dark:text-warm-amber"}`, children: /* @__PURE__ */ jsx(Icon, { size: 22 }) }),
     /* @__PURE__ */ jsxs("div", { className: "flex-1 text-left", children: [
-      /* @__PURE__ */ jsx("h3", { className: `font-bold text-sm ${isDanger ? "text-red-500" : "text-gray-800 dark:text-slate-100"}`, children: title }),
-      subtitle && /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-500 dark:text-slate-400", children: subtitle })
+      /* @__PURE__ */ jsx("h3", { className: `font-bold text-sm ${isDanger ? "text-red-500" : "text-gray-800 dark:text-stone-100"}`, children: title }),
+      subtitle && /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-500 dark:text-stone-400", children: subtitle })
     ] }),
-    /* @__PURE__ */ jsx(ChevronRight, { size: 18, className: "text-gray-300 dark:text-slate-500" })
+    /* @__PURE__ */ jsx(ChevronRight, { size: 18, className: "text-gray-300 dark:text-stone-500" })
   ] });
   const renderHome = () => {
     const mainStruggle = user.struggles && user.struggles.length > 0 ? user.struggles[0] : "Faith & Fellowship";
@@ -357,13 +357,13 @@ var Dashboard = ({ user, setUser, onLogout }) => {
     return /* @__PURE__ */ jsxs("div", { className: "space-y-6 pb-24 animate-fade-in", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center pt-1", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
-          /* @__PURE__ */ jsx("div", { className: "p-1.5 bg-primary/10 dark:bg-emerald-950/60 rounded-xl flex items-center justify-center border border-primary/15 dark:border-emerald-800/50", children: /* @__PURE__ */ jsx("img", { src: "/logo.png", alt: "Selah", className: "w-8 h-8 rounded-lg object-cover" }) }),
+          /* @__PURE__ */ jsx("div", { className: "p-1.5 bg-primary/10 dark:bg-stone-800/60 rounded-xl flex items-center justify-center border border-primary/15 dark:border-stone-700/50", children: /* @__PURE__ */ jsx("img", { src: "/logo.png", alt: "Selah", className: "w-8 h-8 rounded-lg object-cover" }) }),
           /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsxs("h1", { className: "font-serif text-lg font-bold text-primary dark:text-emerald-400 leading-tight", children: [
+            /* @__PURE__ */ jsxs("h1", { className: "font-serif text-lg font-bold text-primary dark:text-warm-amber leading-tight", children: [
               "Welcome, ",
               userName
             ] }),
-            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-gray-500 dark:text-slate-400", children: "Peace be with you today" })
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-gray-500 dark:text-stone-400", children: "Peace be with you today" })
           ] })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "flex items-center bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-300 px-3 py-1.5 rounded-full text-xs font-bold border border-orange-200/50 dark:border-orange-900/50", children: [
@@ -372,19 +372,19 @@ var Dashboard = ({ user, setUser, onLogout }) => {
           " days streak"
         ] })
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "bg-secondary/10 dark:bg-emerald-950/40 border border-secondary/20 dark:border-emerald-800/40 rounded-2xl p-4 text-xs text-secondary dark:text-emerald-300 leading-relaxed font-medium flex items-start gap-3 shadow-xs", children: [
-        /* @__PURE__ */ jsx(Users, { size: 20, className: "text-primary dark:text-emerald-400 shrink-0 mt-0.5" }),
+      /* @__PURE__ */ jsxs("div", { className: "bg-secondary/10 dark:bg-stone-800/40 border border-secondary/20 dark:border-stone-700/40 rounded-2xl p-4 text-xs text-secondary dark:text-stone-300 leading-relaxed font-medium flex items-start gap-3 shadow-xs", children: [
+        /* @__PURE__ */ jsx(Users, { size: 20, className: "text-primary dark:text-warm-amber shrink-0 mt-0.5" }),
         /* @__PURE__ */ jsxs("div", { children: [
           "Did you know? ",
-          /* @__PURE__ */ jsx("strong", { className: "text-primary dark:text-emerald-300 font-bold", children: "64% of believers" }),
+          /* @__PURE__ */ jsx("strong", { className: "text-primary dark:text-warm-amber font-bold", children: "64% of believers" }),
           " in our fellowship are navigating ",
           /* @__PURE__ */ jsx("span", { className: "underline font-semibold", children: mainStruggle }),
           " alongside you today. You are not alone!"
         ] })
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "bg-primary dark:bg-emerald-950 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden border border-primary/20 dark:border-emerald-800/50", children: [
+      /* @__PURE__ */ jsxs("div", { className: "bg-primary dark:bg-stone-800 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden border border-primary/20 dark:border-stone-700/50", children: [
         /* @__PURE__ */ jsx("div", { className: "absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-white opacity-10 rounded-full blur-xl" }),
-        /* @__PURE__ */ jsx("h3", { className: "text-xs uppercase tracking-widest text-white/70 dark:text-emerald-200/70 mb-2 font-semibold", children: "Scripture of the Day" }),
+        /* @__PURE__ */ jsx("h3", { className: "text-xs uppercase tracking-widest text-white/70 dark:text-warm-amber/70 mb-2 font-semibold", children: "Scripture of the Day" }),
         scripture ? /* @__PURE__ */ jsxs(Fragment, { children: [
           /* @__PURE__ */ jsxs("p", { className: "font-serif text-base md:text-lg leading-relaxed italic mb-4", children: [
             '"',
@@ -392,7 +392,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
             '"'
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between flex-wrap gap-2", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-xs font-bold text-accent dark:text-emerald-300", children: scripture.reference }),
+            /* @__PURE__ */ jsx("span", { className: "text-xs font-bold text-accent dark:text-amber-300", children: scripture.reference }),
             /* @__PURE__ */ jsxs(
               "button",
               {
@@ -411,13 +411,13 @@ var Dashboard = ({ user, setUser, onLogout }) => {
         /* @__PURE__ */ jsx("span", { children: prayerSubmittedNotice }),
         /* @__PURE__ */ jsx("button", { onClick: () => setPrayerSubmittedNotice(null), className: "hover:opacity-80", children: /* @__PURE__ */ jsx(X, { size: 16 }) })
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-xs border border-gray-100 dark:border-slate-700/80 space-y-4", children: [
-        /* @__PURE__ */ jsx("div", { className: "flex justify-between items-center border-b border-gray-100 dark:border-slate-700 pb-3", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsx(Heart, { className: "text-primary dark:text-emerald-400", size: 18 }),
-          /* @__PURE__ */ jsx("h3", { className: "font-serif font-bold text-gray-800 dark:text-slate-100 text-sm", children: "Prayer Request of the Day" })
+      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-stone-900 rounded-2xl p-5 shadow-xs border border-gray-100 dark:border-stone-700/80 space-y-4", children: [
+        /* @__PURE__ */ jsx("div", { className: "flex justify-between items-center border-b border-gray-100 dark:border-stone-700 pb-3", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsx(Heart, { className: "text-primary dark:text-warm-amber", size: 18 }),
+          /* @__PURE__ */ jsx("h3", { className: "font-serif font-bold text-gray-800 dark:text-stone-100 text-sm", children: "Prayer Request of the Day" })
         ] }) }),
-        /* @__PURE__ */ jsxs("div", { className: "p-4 bg-cream/70 dark:bg-slate-900/70 rounded-xl text-xs border border-gray-200/60 dark:border-slate-700/60 space-y-3", children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-secondary dark:text-emerald-400 font-bold text-xs", children: [
+        /* @__PURE__ */ jsxs("div", { className: "p-4 bg-cream/70 dark:bg-stone-900/70 rounded-xl text-xs border border-gray-200/60 dark:border-stone-700/60 space-y-3", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-secondary dark:text-warm-amber font-bold text-xs", children: [
             /* @__PURE__ */ jsx("span", { className: "text-base", children: dailyPrayer.flag }),
             /* @__PURE__ */ jsxs("span", { children: [
               dailyPrayer.author,
@@ -425,7 +425,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
               dailyPrayer.country
             ] })
           ] }),
-          /* @__PURE__ */ jsxs("p", { className: "text-gray-800 dark:text-slate-200 leading-relaxed font-serif text-sm italic", children: [
+          /* @__PURE__ */ jsxs("p", { className: "text-gray-800 dark:text-stone-200 leading-relaxed font-serif text-sm italic", children: [
             '"',
             dailyPrayer.content,
             '"'
@@ -434,9 +434,9 @@ var Dashboard = ({ user, setUser, onLogout }) => {
             "button",
             {
               onClick: handleToggleDailyPrayer,
-              className: `px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 shadow-xs ${dailyPrayer.hasPrayed ? "bg-primary dark:bg-emerald-700 text-white ring-2 ring-primary/20" : "bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 hover:border-primary"}`,
+              className: `px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 shadow-xs ${dailyPrayer.hasPrayed ? "bg-primary dark:bg-stone-700 text-white ring-2 ring-primary/20" : "bg-white dark:bg-stone-900 border border-gray-300 dark:border-stone-600 text-gray-700 dark:text-stone-200 hover:border-primary"}`,
               children: [
-                /* @__PURE__ */ jsx(Heart, { size: 16, className: dailyPrayer.hasPrayed ? "fill-white text-white" : "text-primary dark:text-emerald-400" }),
+                /* @__PURE__ */ jsx(Heart, { size: 16, className: dailyPrayer.hasPrayed ? "fill-white text-white" : "text-primary dark:text-warm-amber" }),
                 dailyPrayer.hasPrayed ? `Prayed (Thank you!)` : `\u{1F64F} I Prayed For This`
               ]
             }
@@ -446,16 +446,16 @@ var Dashboard = ({ user, setUser, onLogout }) => {
           "button",
           {
             onClick: () => setShowSubmitPrayer(true),
-            className: "w-full py-2.5 px-4 bg-cream/40 dark:bg-slate-900/40 hover:bg-cream/80 dark:hover:bg-slate-900/80 border border-dashed border-gray-300 dark:border-slate-700 text-gray-600 dark:text-slate-300 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5",
+            className: "w-full py-2.5 px-4 bg-cream/40 dark:bg-stone-900/40 hover:bg-cream/80 dark:hover:bg-stone-900/80 border border-dashed border-gray-300 dark:border-stone-700 text-gray-600 dark:text-stone-300 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5",
             children: [
-              /* @__PURE__ */ jsx(Plus, { size: 16, className: "text-primary dark:text-emerald-400" }),
+              /* @__PURE__ */ jsx(Plus, { size: 16, className: "text-primary dark:text-warm-amber" }),
               "Submit Your Own Prayer Request"
             ]
           }
-        ) : /* @__PURE__ */ jsxs("div", { className: "bg-cream/40 dark:bg-slate-900/60 p-4 rounded-xl border border-gray-200 dark:border-slate-700 space-y-3 animate-fade-in", children: [
+        ) : /* @__PURE__ */ jsxs("div", { className: "bg-cream/40 dark:bg-stone-900/60 p-4 rounded-xl border border-gray-200 dark:border-stone-700 space-y-3 animate-fade-in", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-xs font-bold text-gray-800 dark:text-slate-200", children: "Submit a Prayer Request" }),
-            /* @__PURE__ */ jsx("button", { onClick: () => setShowSubmitPrayer(false), className: "text-gray-400 hover:text-gray-600 dark:hover:text-slate-300", children: /* @__PURE__ */ jsx(X, { size: 16 }) })
+            /* @__PURE__ */ jsx("span", { className: "text-xs font-bold text-gray-800 dark:text-stone-200", children: "Submit a Prayer Request" }),
+            /* @__PURE__ */ jsx("button", { onClick: () => setShowSubmitPrayer(false), className: "text-gray-400 hover:text-gray-600 dark:hover:text-stone-300", children: /* @__PURE__ */ jsx(X, { size: 16 }) })
           ] }),
           /* @__PURE__ */ jsx(
             "textarea",
@@ -464,11 +464,11 @@ var Dashboard = ({ user, setUser, onLogout }) => {
               value: userPrayerText,
               onChange: (e) => setUserPrayerText(e.target.value),
               placeholder: "Share what is on your heart so our global community can pray with you...",
-              className: "w-full p-3 text-xs bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-100 rounded-lg outline-none focus:border-primary resize-none"
+              className: "w-full p-3 text-xs bg-white dark:bg-stone-900 border border-gray-200 dark:border-stone-700 text-gray-800 dark:text-stone-100 rounded-lg outline-none focus:border-primary resize-none"
             }
           ),
           /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center pt-1", children: [
-            /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-2 cursor-pointer text-xs text-gray-600 dark:text-slate-300", children: [
+            /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-2 cursor-pointer text-xs text-gray-600 dark:text-stone-300", children: [
               /* @__PURE__ */ jsx(
                 "input",
                 {
@@ -485,7 +485,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
               {
                 disabled: !userPrayerText.trim(),
                 onClick: handleUserPrayerSubmit,
-                className: "px-4 py-2 bg-primary dark:bg-emerald-800 text-white text-xs font-bold rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-all flex items-center gap-1.5",
+                className: "px-4 py-2 bg-primary dark:bg-stone-800 text-white text-xs font-bold rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-all flex items-center gap-1.5",
                 children: [
                   /* @__PURE__ */ jsx(Send, { size: 14 }),
                   " Submit"
@@ -501,12 +501,12 @@ var Dashboard = ({ user, setUser, onLogout }) => {
     const currentChannelObj = channels.find((c) => c.id === selectedChannel) || channels[0];
     const currentPosts = channelPosts[selectedChannel] || channelPosts["general-fellowship"];
     return /* @__PURE__ */ jsxs("div", { className: "space-y-4 pb-24 animate-fade-in", children: [
-      /* @__PURE__ */ jsxs("div", { className: "border-b dark:border-slate-700 pb-3 flex justify-between items-center", children: [
+      /* @__PURE__ */ jsxs("div", { className: "border-b dark:border-stone-700 pb-3 flex justify-between items-center", children: [
         /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsx("h2", { className: "font-serif text-2xl text-primary dark:text-emerald-400 font-bold", children: "Discussion Hub" }),
-          /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-500 dark:text-slate-400", children: "Moderated fellowship & discussion spaces" })
+          /* @__PURE__ */ jsx("h2", { className: "font-serif text-2xl text-primary dark:text-warm-amber font-bold", children: "Discussion Hub" }),
+          /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-500 dark:text-stone-400", children: "Moderated fellowship & discussion spaces" })
         ] }),
-        /* @__PURE__ */ jsxs("span", { className: "bg-green-100 dark:bg-emerald-950 text-green-700 dark:text-emerald-300 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md flex items-center gap-1 border border-green-200 dark:border-emerald-800", children: [
+        /* @__PURE__ */ jsxs("span", { className: "bg-green-100 dark:bg-stone-900 text-green-700 dark:text-amber-300 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md flex items-center gap-1 border border-green-200 dark:border-stone-800", children: [
           /* @__PURE__ */ jsx(ShieldCheck, { size: 12 }),
           " Protected"
         ] })
@@ -517,34 +517,34 @@ var Dashboard = ({ user, setUser, onLogout }) => {
           "button",
           {
             onClick: () => setSelectedChannel(ch.id),
-            className: `whitespace-nowrap text-xs px-3.5 py-2 rounded-xl font-bold transition-all shrink-0 flex items-center gap-1.5 ${isSelected ? "bg-primary dark:bg-emerald-800 text-white shadow-xs" : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:border-gray-300"}`,
+            className: `whitespace-nowrap text-xs px-3.5 py-2 rounded-xl font-bold transition-all shrink-0 flex items-center gap-1.5 ${isSelected ? "bg-primary dark:bg-stone-800 text-white shadow-xs" : "bg-white dark:bg-stone-900 text-gray-600 dark:text-stone-300 border border-gray-200 dark:border-stone-700 hover:border-gray-300"}`,
             children: [
-              /* @__PURE__ */ jsx(Hash, { size: 12, className: isSelected ? "text-accent dark:text-emerald-300" : "text-gray-400 dark:text-slate-500" }),
+              /* @__PURE__ */ jsx(Hash, { size: 12, className: isSelected ? "text-accent dark:text-amber-300" : "text-gray-400 dark:text-stone-500" }),
               ch.name
             ]
           },
           ch.id
         );
       }) }),
-      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700/80 shadow-xs flex justify-between items-center", children: [
+      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs flex justify-between items-center", children: [
         /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsxs("h3", { className: "font-bold text-sm text-gray-800 dark:text-slate-100 flex items-center gap-1.5", children: [
-            /* @__PURE__ */ jsx(Hash, { size: 16, className: "text-primary dark:text-emerald-400" }),
+          /* @__PURE__ */ jsxs("h3", { className: "font-bold text-sm text-gray-800 dark:text-stone-100 flex items-center gap-1.5", children: [
+            /* @__PURE__ */ jsx(Hash, { size: 16, className: "text-primary dark:text-warm-amber" }),
             currentChannelObj.name
           ] }),
-          /* @__PURE__ */ jsxs("p", { className: "text-xs text-gray-500 dark:text-slate-400 mt-0.5", children: [
+          /* @__PURE__ */ jsxs("p", { className: "text-xs text-gray-500 dark:text-stone-400 mt-0.5", children: [
             "Category: ",
             currentChannelObj.category
           ] })
         ] }),
-        /* @__PURE__ */ jsx("span", { className: "text-[11px] text-primary dark:text-emerald-400 bg-primary/5 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full font-semibold", children: "Active" })
+        /* @__PURE__ */ jsx("span", { className: "text-[11px] text-primary dark:text-warm-amber bg-primary/5 dark:bg-stone-950/60 px-2.5 py-1 rounded-full font-semibold", children: "Active" })
       ] }),
-      /* @__PURE__ */ jsx("div", { className: "space-y-3 min-h-[35vh]", children: currentPosts.map((post) => /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700/80 shadow-xs space-y-2", children: [
+      /* @__PURE__ */ jsx("div", { className: "space-y-3 min-h-[35vh]", children: currentPosts.map((post) => /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs space-y-2", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center text-xs", children: [
-          /* @__PURE__ */ jsx("span", { className: "font-bold text-primary dark:text-emerald-400", children: post.author }),
-          /* @__PURE__ */ jsx("span", { className: "text-gray-400 dark:text-slate-500 text-[10px]", children: new Date(post.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) })
+          /* @__PURE__ */ jsx("span", { className: "font-bold text-primary dark:text-warm-amber", children: post.author }),
+          /* @__PURE__ */ jsx("span", { className: "text-gray-400 dark:text-stone-500 text-[10px]", children: new Date(post.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) })
         ] }),
-        /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-700 dark:text-slate-200 leading-relaxed", children: post.content }),
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-700 dark:text-stone-200 leading-relaxed", children: post.content }),
         /* @__PURE__ */ jsx("div", { className: "flex justify-end pt-1", children: /* @__PURE__ */ jsxs(
           "button",
           {
@@ -556,7 +556,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
                 )
               }));
             },
-            className: "text-[11px] text-gray-500 dark:text-slate-400 hover:text-primary dark:hover:text-emerald-300 flex items-center gap-1 bg-cream dark:bg-slate-900 px-2.5 py-1 rounded-lg border dark:border-slate-700",
+            className: "text-[11px] text-gray-500 dark:text-stone-400 hover:text-primary dark:hover:text-amber-300 flex items-center gap-1 bg-cream dark:bg-stone-900 px-2.5 py-1 rounded-lg border dark:border-stone-700",
             children: [
               /* @__PURE__ */ jsx(ThumbsUp, { size: 12 }),
               " ",
@@ -566,7 +566,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
           }
         ) })
       ] }, post.id)) }),
-      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm flex gap-2", children: [
+      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-stone-900 p-3 rounded-xl border border-gray-200 dark:border-stone-700 shadow-sm flex gap-2", children: [
         /* @__PURE__ */ jsx(
           "input",
           {
@@ -574,7 +574,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
             value: newChannelPost,
             onChange: (e) => setNewChannelPost(e.target.value),
             placeholder: `Message #${currentChannelObj.name}...`,
-            className: "flex-1 text-xs p-2.5 bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-slate-100 rounded-lg outline-none border border-transparent focus:border-primary dark:focus:border-emerald-500",
+            className: "flex-1 text-xs p-2.5 bg-gray-50 dark:bg-stone-900 text-gray-800 dark:text-stone-100 rounded-lg outline-none border border-transparent focus:border-primary dark:focus:border-warm-amber",
             onKeyDown: (e) => e.key === "Enter" && handlePostToChannel()
           }
         ),
@@ -582,7 +582,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
           "button",
           {
             onClick: handlePostToChannel,
-            className: "bg-primary dark:bg-emerald-800 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary/90 transition-all flex items-center gap-1",
+            className: "bg-primary dark:bg-stone-800 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary/90 transition-all flex items-center gap-1",
             children: [
               /* @__PURE__ */ jsx(Send, { size: 14 }),
               " Send"
@@ -596,22 +596,22 @@ var Dashboard = ({ user, setUser, onLogout }) => {
     return /* @__PURE__ */ jsxs("div", { className: "space-y-6 pb-24 animate-fade-in", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center pt-2 pb-4", children: [
         /* @__PURE__ */ jsxs("div", { className: "relative mb-3", children: [
-          user.profilePicture ? /* @__PURE__ */ jsx("img", { src: user.profilePicture, alt: "Profile", className: "w-24 h-24 rounded-full object-cover border-4 border-white dark:border-slate-700 shadow-md" }) : /* @__PURE__ */ jsx("div", { className: "w-24 h-24 rounded-full bg-primary dark:bg-emerald-900 flex items-center justify-center text-white text-3xl font-serif font-bold border-4 border-white dark:border-slate-700 shadow-md", children: user.name ? user.name.substring(0, 2).toUpperCase() : "ME" }),
+          user.profilePicture ? /* @__PURE__ */ jsx("img", { src: user.profilePicture, alt: "Profile", className: "w-24 h-24 rounded-full object-cover border-4 border-white dark:border-stone-700 shadow-md" }) : /* @__PURE__ */ jsx("div", { className: "w-24 h-24 rounded-full bg-primary dark:bg-stone-800 flex items-center justify-center text-white text-3xl font-serif font-bold border-4 border-white dark:border-stone-700 shadow-md", children: user.name ? user.name.substring(0, 2).toUpperCase() : "ME" }),
           /* @__PURE__ */ jsx(
             "button",
             {
               onClick: () => setProfileView("edit-profile"),
-              className: "absolute bottom-0 right-0 bg-white dark:bg-slate-700 p-2 rounded-full shadow-md border border-gray-100 dark:border-slate-600 text-primary dark:text-emerald-400 hover:text-secondary",
+              className: "absolute bottom-0 right-0 bg-white dark:bg-stone-700 p-2 rounded-full shadow-md border border-gray-100 dark:border-stone-600 text-primary dark:text-warm-amber hover:text-secondary",
               children: /* @__PURE__ */ jsx(Edit2, { size: 16 })
             }
           )
         ] }),
-        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl font-bold text-primary dark:text-emerald-400", children: user.name || "Fellow Believer" }),
-        /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-500 dark:text-slate-400 mt-0.5", children: user.email })
+        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl font-bold text-primary dark:text-warm-amber", children: user.name || "Fellow Believer" }),
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-500 dark:text-stone-400 mt-0.5", children: user.email })
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700/80 shadow-xs space-y-2", children: [
-        /* @__PURE__ */ jsx("h3", { className: "font-serif font-bold text-xs uppercase tracking-wide text-primary dark:text-emerald-400", children: "Active Memberships" }),
-        /* @__PURE__ */ jsxs("div", { className: "text-xs text-gray-700 dark:text-slate-300 space-y-1", children: [
+      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs space-y-2", children: [
+        /* @__PURE__ */ jsx("h3", { className: "font-serif font-bold text-xs uppercase tracking-wide text-primary dark:text-warm-amber", children: "Active Memberships" }),
+        /* @__PURE__ */ jsxs("div", { className: "text-xs text-gray-700 dark:text-stone-300 space-y-1", children: [
           /* @__PURE__ */ jsxs("div", { children: [
             /* @__PURE__ */ jsx("strong", { children: "Bible Study:" }),
             " ",
@@ -630,19 +630,19 @@ var Dashboard = ({ user, setUser, onLogout }) => {
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700/80 shadow-xs flex justify-between items-center", children: [
+      /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs flex justify-between items-center", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
-          /* @__PURE__ */ jsx("div", { className: "p-2 rounded-full bg-primary/5 dark:bg-emerald-950/60 text-primary dark:text-emerald-400", children: isDarkMode ? /* @__PURE__ */ jsx(Moon, { size: 22 }) : /* @__PURE__ */ jsx(Sun, { size: 22 }) }),
+          /* @__PURE__ */ jsx("div", { className: "p-2 rounded-full bg-primary/5 dark:bg-stone-950/60 text-primary dark:text-warm-amber", children: isDarkMode ? /* @__PURE__ */ jsx(Moon, { size: 22 }) : /* @__PURE__ */ jsx(Sun, { size: 22 }) }),
           /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsx("h3", { className: "font-bold text-sm text-gray-800 dark:text-slate-100", children: "Dark Mode" }),
-            /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-500 dark:text-slate-400", children: "Switch to obsidian night palette" })
+            /* @__PURE__ */ jsx("h3", { className: "font-bold text-sm text-gray-800 dark:text-stone-100", children: "Dark Mode" }),
+            /* @__PURE__ */ jsx("p", { className: "text-xs text-gray-500 dark:text-stone-400", children: "Switch to obsidian night palette" })
           ] })
         ] }),
         /* @__PURE__ */ jsx(
           "button",
           {
             onClick: () => setIsDarkMode(!isDarkMode),
-            className: `w-12 h-6 rounded-full p-1 cursor-pointer transition-colors ${isDarkMode ? "bg-primary dark:bg-emerald-600" : "bg-gray-300"}`,
+            className: `w-12 h-6 rounded-full p-1 cursor-pointer transition-colors ${isDarkMode ? "bg-primary dark:bg-warm-amber" : "bg-gray-300"}`,
             children: /* @__PURE__ */ jsx("div", { className: `w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${isDarkMode ? "translate-x-6" : ""}` })
           }
         )
@@ -671,16 +671,16 @@ var Dashboard = ({ user, setUser, onLogout }) => {
     };
     return /* @__PURE__ */ jsxs("div", { className: "space-y-6 pb-24 animate-fade-in", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 mb-4", children: [
-        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-slate-200" }) }),
-        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-emerald-400 font-bold", children: "Edit Profile" })
+        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-stone-200" }) }),
+        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-warm-amber font-bold", children: "Edit Profile" })
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
         /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsx("label", { className: "block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1", children: "Name" }),
-          /* @__PURE__ */ jsx("input", { value: name, onChange: (e) => setName(e.target.value), className: "w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 outline-none focus:border-primary" })
+          /* @__PURE__ */ jsx("label", { className: "block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1", children: "Name" }),
+          /* @__PURE__ */ jsx("input", { value: name, onChange: (e) => setName(e.target.value), className: "w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary" })
         ] }),
         /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsx("label", { className: "block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1", children: "About Me" }),
+          /* @__PURE__ */ jsx("label", { className: "block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1", children: "About Me" }),
           /* @__PURE__ */ jsx(
             "textarea",
             {
@@ -688,7 +688,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
               onChange: (e) => setBio(e.target.value),
               maxLength: 200,
               placeholder: "Share a little about your faith walk...",
-              className: "w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 outline-none focus:border-primary h-28 resize-none"
+              className: "w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary h-28 resize-none"
             }
           )
         ] })
@@ -708,23 +708,23 @@ var Dashboard = ({ user, setUser, onLogout }) => {
     };
     return /* @__PURE__ */ jsxs("div", { className: "space-y-6 pb-24 animate-fade-in", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 mb-4", children: [
-        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-slate-200" }) }),
-        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-emerald-400 font-bold", children: "Location" })
+        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-stone-200" }) }),
+        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-warm-amber font-bold", children: "Location" })
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
         /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsx("label", { className: "block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1", children: "City / Country" }),
+          /* @__PURE__ */ jsx("label", { className: "block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1", children: "City / Country" }),
           /* @__PURE__ */ jsx(
             "input",
             {
               value: localLocation,
               onChange: (e) => setLocalLocation(e.target.value),
               placeholder: "e.g., London, UK",
-              className: "w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 outline-none focus:border-primary"
+              className: "w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
             }
           )
         ] }),
-        /* @__PURE__ */ jsx("p", { className: "text-[11px] text-gray-500 dark:text-slate-400 leading-relaxed", children: "This helps us connect you with local prayer groups and events." })
+        /* @__PURE__ */ jsx("p", { className: "text-[11px] text-gray-500 dark:text-stone-400 leading-relaxed", children: "This helps us connect you with local prayer groups and events." })
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "flex gap-3 pt-2", children: [
         /* @__PURE__ */ jsx(Button, { variant: "outline", onClick: () => setProfileView("menu"), children: "Cancel" }),
@@ -740,8 +740,8 @@ var Dashboard = ({ user, setUser, onLogout }) => {
     };
     return /* @__PURE__ */ jsxs("div", { className: "space-y-6 pb-24 animate-fade-in", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 mb-4", children: [
-        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-slate-200" }) }),
-        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-emerald-400 font-bold", children: "Discussion Focus Areas" })
+        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-stone-200" }) }),
+        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-warm-amber font-bold", children: "Discussion Focus Areas" })
       ] }),
       /* @__PURE__ */ jsx("div", { className: "space-y-2", children: STRUGGLES.map((s) => {
         const isSelected = localStruggles.includes(s);
@@ -749,7 +749,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
           "button",
           {
             onClick: () => toggle(s),
-            className: `w-full text-left p-3.5 rounded-xl transition-all border flex justify-between items-center text-xs ${isSelected ? "bg-primary dark:bg-emerald-800 text-white border-primary shadow-xs font-bold" : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200"}`,
+            className: `w-full text-left p-3.5 rounded-xl transition-all border flex justify-between items-center text-xs ${isSelected ? "bg-primary dark:bg-stone-800 text-white border-primary shadow-xs font-bold" : "bg-white dark:bg-stone-900 border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200"}`,
             children: [
               /* @__PURE__ */ jsx("span", { children: s }),
               isSelected && /* @__PURE__ */ jsx(Check, { size: 16 })
@@ -797,8 +797,8 @@ var Dashboard = ({ user, setUser, onLogout }) => {
     const customInterestsList = localInterests.filter((i) => !options.includes(i));
     return /* @__PURE__ */ jsxs("div", { className: "space-y-6 pb-24 animate-fade-in", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 mb-4", children: [
-        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-slate-200" }) }),
-        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-emerald-400 font-bold", children: "Biblical Interests" })
+        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-stone-200" }) }),
+        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-warm-amber font-bold", children: "Biblical Interests" })
       ] }),
       /* @__PURE__ */ jsx("div", { className: "grid grid-cols-2 gap-2.5", children: options.map((opt) => {
         const isSelected = localInterests.includes(opt);
@@ -806,14 +806,14 @@ var Dashboard = ({ user, setUser, onLogout }) => {
           "button",
           {
             onClick: () => toggle(opt),
-            className: `p-3 rounded-xl border text-xs font-semibold text-left transition-all ${isSelected ? "bg-primary dark:bg-emerald-800 text-white border-primary shadow-xs" : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-200"}`,
+            className: `p-3 rounded-xl border text-xs font-semibold text-left transition-all ${isSelected ? "bg-primary dark:bg-stone-800 text-white border-primary shadow-xs" : "bg-white dark:bg-stone-900 border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200"}`,
             children: opt
           },
           opt
         );
       }) }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-2 pt-2", children: [
-        /* @__PURE__ */ jsx("label", { className: "block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1", children: "Add Custom Interest" }),
+        /* @__PURE__ */ jsx("label", { className: "block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1", children: "Add Custom Interest" }),
         /* @__PURE__ */ jsxs("div", { className: "flex gap-2", children: [
           /* @__PURE__ */ jsx(
             "input",
@@ -824,13 +824,13 @@ var Dashboard = ({ user, setUser, onLogout }) => {
                 if (e.key === "Enter") addCustomInterest();
               },
               placeholder: "e.g., Worship Music, Church History",
-              className: "flex-1 p-3 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-100 outline-none focus:border-primary"
+              className: "flex-1 p-3 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
             }
           ),
           /* @__PURE__ */ jsx(Button, { onClick: addCustomInterest, children: "Add" })
         ] })
       ] }),
-      customInterestsList.length > 0 && /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2 pt-2", children: customInterestsList.map((interest) => /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 dark:bg-emerald-950/60 text-primary dark:text-emerald-300 rounded-full text-xs font-medium", children: [
+      customInterestsList.length > 0 && /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2 pt-2", children: customInterestsList.map((interest) => /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 dark:bg-stone-950/60 text-primary dark:text-amber-300 rounded-full text-xs font-medium", children: [
         interest,
         /* @__PURE__ */ jsx("button", { onClick: () => removeInterest(interest), className: "hover:text-red-500 dark:hover:text-red-400 transition-colors", children: /* @__PURE__ */ jsx(X, { size: 12 }) })
       ] }, interest)) }),
@@ -853,17 +853,17 @@ var Dashboard = ({ user, setUser, onLogout }) => {
       if (diffDays < 7) return `${diffDays} days ago`;
       return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
     };
-    const PrayerCard = ({ prayer }) => /* @__PURE__ */ jsxs("div", { className: `bg-white dark:bg-slate-800 p-4 rounded-xl border shadow-xs space-y-3 ${prayer.answered ? "border-primary/40 dark:border-emerald-700/60 bg-primary/5 dark:bg-emerald-950/30" : "border-gray-100 dark:border-slate-700/80"}`, children: [
-      /* @__PURE__ */ jsxs("p", { className: "font-serif text-sm italic text-gray-800 dark:text-slate-200 leading-relaxed", children: [
+    const PrayerCard = ({ prayer }) => /* @__PURE__ */ jsxs("div", { className: `bg-white dark:bg-stone-900 p-4 rounded-xl border shadow-xs space-y-3 ${prayer.answered ? "border-primary/40 dark:border-stone-700/60 bg-primary/5 dark:bg-stone-950/30" : "border-gray-100 dark:border-stone-700/80"}`, children: [
+      /* @__PURE__ */ jsxs("p", { className: "font-serif text-sm italic text-gray-800 dark:text-stone-200 leading-relaxed", children: [
         '"',
         prayer.content,
         '"'
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center text-[11px] text-gray-500 dark:text-slate-400", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center text-[11px] text-gray-500 dark:text-stone-400", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
           /* @__PURE__ */ jsx("span", { children: formatDate(prayer.timestamp) }),
-          prayer.anonymous && /* @__PURE__ */ jsx("span", { className: "px-2 py-0.5 bg-gray-100 dark:bg-slate-700 rounded-full text-[10px] font-medium", children: "Anonymous" }),
-          prayer.answered && /* @__PURE__ */ jsxs("span", { className: "px-2 py-0.5 bg-primary/15 dark:bg-emerald-900/60 text-primary dark:text-emerald-300 rounded-full text-[10px] font-bold flex items-center gap-1", children: [
+          prayer.anonymous && /* @__PURE__ */ jsx("span", { className: "px-2 py-0.5 bg-gray-100 dark:bg-stone-700 rounded-full text-[10px] font-medium", children: "Anonymous" }),
+          prayer.answered && /* @__PURE__ */ jsxs("span", { className: "px-2 py-0.5 bg-primary/15 dark:bg-stone-900/60 text-primary dark:text-amber-300 rounded-full text-[10px] font-bold flex items-center gap-1", children: [
             /* @__PURE__ */ jsx(Check, { size: 10 }),
             " Answered"
           ] })
@@ -873,7 +873,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
             "button",
             {
               onClick: () => togglePrayerAnswered(prayer.id),
-              className: `p-1.5 rounded-lg transition-colors ${prayer.answered ? "bg-primary/10 dark:bg-emerald-900/60 text-primary dark:text-emerald-300" : "text-gray-400 dark:text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-primary"}`,
+              className: `p-1.5 rounded-lg transition-colors ${prayer.answered ? "bg-primary/10 dark:bg-stone-900/60 text-primary dark:text-amber-300" : "text-gray-400 dark:text-stone-500 hover:bg-gray-100 dark:hover:bg-stone-800 hover:text-primary"}`,
               title: prayer.answered ? "Mark as not answered" : "Mark as answered",
               children: /* @__PURE__ */ jsx(Check, { size: 14 })
             }
@@ -882,7 +882,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
             "button",
             {
               onClick: () => restorePrayer(prayer.id),
-              className: "p-1.5 rounded-lg text-gray-400 dark:text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-primary",
+              className: "p-1.5 rounded-lg text-gray-400 dark:text-stone-500 hover:bg-gray-100 dark:hover:bg-stone-800 hover:text-primary",
               title: "Restore prayer",
               children: /* @__PURE__ */ jsx(Plus, { size: 14 })
             }
@@ -890,7 +890,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
             "button",
             {
               onClick: () => archivePrayer(prayer.id),
-              className: "p-1.5 rounded-lg text-gray-400 dark:text-slate-500 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-secondary",
+              className: "p-1.5 rounded-lg text-gray-400 dark:text-stone-500 hover:bg-gray-100 dark:hover:bg-stone-800 hover:text-secondary",
               title: "Archive prayer",
               children: /* @__PURE__ */ jsx(Hash, { size: 14 })
             }
@@ -899,7 +899,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
             "button",
             {
               onClick: () => deletePrayer(prayer.id),
-              className: "p-1.5 rounded-lg text-gray-400 dark:text-slate-500 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-500",
+              className: "p-1.5 rounded-lg text-gray-400 dark:text-stone-500 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-500",
               title: "Delete prayer",
               children: /* @__PURE__ */ jsx(X, { size: 14 })
             }
@@ -909,15 +909,15 @@ var Dashboard = ({ user, setUser, onLogout }) => {
     ] });
     return /* @__PURE__ */ jsxs("div", { className: "space-y-6 pb-24 animate-fade-in", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 mb-4", children: [
-        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-slate-200" }) }),
-        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-emerald-400 font-bold", children: "My Prayers" })
+        /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-stone-200" }) }),
+        /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-warm-amber font-bold", children: "My Prayers" })
       ] }),
-      activePrayers.length === 0 && archivedPrayers.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-slate-800 p-8 rounded-xl border border-gray-100 dark:border-slate-700/80 text-center space-y-3", children: [
-        /* @__PURE__ */ jsx(Heart, { size: 32, className: "text-gray-300 dark:text-slate-600 mx-auto" }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm text-gray-600 dark:text-slate-400 leading-relaxed", children: "You haven't submitted any prayers yet. Share what's on your heart from the Home tab." })
+      activePrayers.length === 0 && archivedPrayers.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-stone-900 p-8 rounded-xl border border-gray-100 dark:border-stone-700/80 text-center space-y-3", children: [
+        /* @__PURE__ */ jsx(Heart, { size: 32, className: "text-gray-300 dark:text-stone-600 mx-auto" }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm text-gray-600 dark:text-stone-400 leading-relaxed", children: "You haven't submitted any prayers yet. Share what's on your heart from the Home tab." })
       ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
         activePrayers.length > 0 && /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
-          /* @__PURE__ */ jsxs("h3", { className: "text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-slate-400", children: [
+          /* @__PURE__ */ jsxs("h3", { className: "text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-stone-400", children: [
             "Active Prayers (",
             activePrayers.length,
             ")"
@@ -925,7 +925,7 @@ var Dashboard = ({ user, setUser, onLogout }) => {
           activePrayers.map((prayer) => /* @__PURE__ */ jsx(PrayerCard, { prayer }, prayer.id))
         ] }),
         archivedPrayers.length > 0 && /* @__PURE__ */ jsxs("div", { className: "space-y-3 pt-4", children: [
-          /* @__PURE__ */ jsxs("h3", { className: "text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-slate-400", children: [
+          /* @__PURE__ */ jsxs("h3", { className: "text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-stone-400", children: [
             "Archived (",
             archivedPrayers.length,
             ")"
@@ -937,25 +937,25 @@ var Dashboard = ({ user, setUser, onLogout }) => {
   };
   const renderNotificationsSettings = () => /* @__PURE__ */ jsxs("div", { className: "space-y-6 pb-24 animate-fade-in", children: [
     /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 mb-4", children: [
-      /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-slate-200" }) }),
-      /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-emerald-400 font-bold", children: "Notifications" })
+      /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-stone-200" }) }),
+      /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-warm-amber font-bold", children: "Notifications" })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "bg-white dark:bg-slate-800 p-5 rounded-xl border border-gray-100 dark:border-slate-700 space-y-4 text-xs", children: /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center", children: [
+    /* @__PURE__ */ jsx("div", { className: "bg-white dark:bg-stone-900 p-5 rounded-xl border border-gray-100 dark:border-stone-700 space-y-4 text-xs", children: /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center", children: [
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h3", { className: "font-bold text-gray-800 dark:text-slate-100", children: "Daily Reminders" }),
-        /* @__PURE__ */ jsx("p", { className: "text-[11px] text-gray-500 dark:text-slate-400", children: "Remind me to connect with fellowship" })
+        /* @__PURE__ */ jsx("h3", { className: "font-bold text-gray-800 dark:text-stone-100", children: "Daily Reminders" }),
+        /* @__PURE__ */ jsx("p", { className: "text-[11px] text-gray-500 dark:text-stone-400", children: "Remind me to connect with fellowship" })
       ] }),
       /* @__PURE__ */ jsx(
         "div",
         {
           onClick: () => updateProfile("notificationsEnabled", !user.notificationsEnabled),
-          className: `w-11 h-6 rounded-full p-1 cursor-pointer transition-colors ${user.notificationsEnabled ? "bg-primary dark:bg-emerald-600" : "bg-gray-300"}`,
+          className: `w-11 h-6 rounded-full p-1 cursor-pointer transition-colors ${user.notificationsEnabled ? "bg-primary dark:bg-warm-amber" : "bg-gray-300"}`,
           children: /* @__PURE__ */ jsx("div", { className: `w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${user.notificationsEnabled ? "translate-x-5" : ""}` })
         }
       )
     ] }) })
   ] });
-  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-cream dark:bg-slate-900 max-w-md mx-auto relative flex flex-col transition-colors duration-300", children: [
+  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-cream dark:bg-stone-950 max-w-md mx-auto relative flex flex-col transition-colors duration-300", children: [
     /* @__PURE__ */ jsxs("div", { className: "flex-1 p-6 overflow-y-auto", children: [
       activeTab === "home" && renderHome(),
       activeTab === "discussions" && renderDiscussions(),
@@ -969,37 +969,37 @@ var Dashboard = ({ user, setUser, onLogout }) => {
         profileView === "prayers" && renderPrayers(),
         profileView === "notifications" && renderNotificationsSettings(),
         profileView === "account" && /* @__PURE__ */ jsxs("div", { className: "space-y-4 pb-24", children: [
-          /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-slate-200" }) }),
-          /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-emerald-400 font-bold", children: "Account Privacy Settings" }),
-          /* @__PURE__ */ jsx("div", { className: "bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700 text-xs space-y-3", children: /* @__PURE__ */ jsx("p", { className: "text-gray-600 dark:text-slate-300", children: "Your account data is private and encrypted. Group discussions are protected by moderation tools." }) })
+          /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-stone-200" }) }),
+          /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-warm-amber font-bold", children: "Account Privacy Settings" }),
+          /* @__PURE__ */ jsx("div", { className: "bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700 text-xs space-y-3", children: /* @__PURE__ */ jsx("p", { className: "text-gray-600 dark:text-stone-300", children: "Your account data is private and encrypted. Group discussions are protected by moderation tools." }) })
         ] }),
         profileView === "help" && /* @__PURE__ */ jsxs("div", { className: "space-y-4 pb-24", children: [
-          /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-slate-200" }) }),
-          /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-emerald-400 font-bold", children: "Help & Support" }),
-          /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700 text-xs space-y-2", children: [
-            /* @__PURE__ */ jsx("p", { className: "font-bold text-primary dark:text-emerald-400", children: "How do group capacities work?" }),
-            /* @__PURE__ */ jsx("p", { className: "text-gray-600 dark:text-slate-300", children: "Each small group is capped at 12 members. If full, you can choose 'Join Late' or 'Wait for Next Group'." })
+          /* @__PURE__ */ jsx("button", { onClick: () => setProfileView("menu"), className: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800", children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-gray-800 dark:text-stone-200" }) }),
+          /* @__PURE__ */ jsx("h2", { className: "font-serif text-xl text-primary dark:text-warm-amber font-bold", children: "Help & Support" }),
+          /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700 text-xs space-y-2", children: [
+            /* @__PURE__ */ jsx("p", { className: "font-bold text-primary dark:text-warm-amber", children: "How do group capacities work?" }),
+            /* @__PURE__ */ jsx("p", { className: "text-gray-600 dark:text-stone-300", children: "Each small group is capped at 12 members. If full, you can choose 'Join Late' or 'Wait for Next Group'." })
           ] })
         ] })
       ] })
     ] }),
-    /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 px-4 py-2 flex justify-between items-center z-50 shadow-md", children: [
-      /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("home"), className: `flex flex-col items-center flex-1 py-1 ${activeTab === "home" ? "text-primary dark:text-emerald-400 font-bold" : "text-gray-400 dark:text-slate-500"}`, children: [
+    /* @__PURE__ */ jsxs("div", { className: "bg-white dark:bg-stone-900 border-t border-gray-200 dark:border-stone-700 px-4 py-2 flex justify-between items-center z-50 shadow-md", children: [
+      /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("home"), className: `flex flex-col items-center flex-1 py-1 ${activeTab === "home" ? "text-primary dark:text-warm-amber font-bold" : "text-gray-400 dark:text-stone-500"}`, children: [
         /* @__PURE__ */ jsx(Home, { size: 20 }),
         /* @__PURE__ */ jsx("span", { className: "text-[10px] mt-0.5", children: "Home" })
       ] }),
-      /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("discussions"), className: `flex flex-col items-center flex-1 py-1 ${activeTab === "discussions" ? "text-primary dark:text-emerald-400 font-bold" : "text-gray-400 dark:text-slate-500"}`, children: [
+      /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("discussions"), className: `flex flex-col items-center flex-1 py-1 ${activeTab === "discussions" ? "text-primary dark:text-warm-amber font-bold" : "text-gray-400 dark:text-stone-500"}`, children: [
         /* @__PURE__ */ jsx(MessageCircle, { size: 20 }),
         /* @__PURE__ */ jsx("span", { className: "text-[10px] mt-0.5", children: "Discussions" })
       ] }),
-      /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("biblestudy"), className: `flex flex-col items-center flex-1 py-1 ${activeTab === "biblestudy" ? "text-primary dark:text-emerald-400 font-bold" : "text-gray-400 dark:text-slate-500"}`, children: [
+      /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("biblestudy"), className: `flex flex-col items-center flex-1 py-1 ${activeTab === "biblestudy" ? "text-primary dark:text-warm-amber font-bold" : "text-gray-400 dark:text-stone-500"}`, children: [
         /* @__PURE__ */ jsx(BookOpen, { size: 20 }),
         /* @__PURE__ */ jsx("span", { className: "text-[10px] mt-0.5", children: "Bible Study" })
       ] }),
       /* @__PURE__ */ jsxs("button", { onClick: () => {
         setActiveTab("profile");
         setProfileView("menu");
-      }, className: `flex flex-col items-center flex-1 py-1 ${activeTab === "profile" ? "text-primary dark:text-emerald-400 font-bold" : "text-gray-400 dark:text-slate-500"}`, children: [
+      }, className: `flex flex-col items-center flex-1 py-1 ${activeTab === "profile" ? "text-primary dark:text-warm-amber font-bold" : "text-gray-400 dark:text-stone-500"}`, children: [
         /* @__PURE__ */ jsx(UserCircle, { size: 20 }),
         /* @__PURE__ */ jsx("span", { className: "text-[10px] mt-0.5", children: "Profile" })
       ] })

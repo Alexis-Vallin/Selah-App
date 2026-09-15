@@ -218,9 +218,9 @@ const seedMessagesFor = (group: BibleStudyGroup): ChatMessage[] => {
 
 const StatusPill: React.FC<{ status: BibleStudyGroup['status'] }> = ({ status }) => {
   const styles = {
-    live: 'bg-amber-100 text-amber-700',
-    full: 'bg-gray-100 dark:bg-taupe/50 text-gray-500 dark:text-cream/60',
-    open: 'bg-primary/10 text-primary',
+    live: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+    full: 'bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400',
+    open: 'bg-warm-amber/10 text-warm-amber dark:bg-warm-amber/20 dark:text-warm-amber',
   };
   return (
     <span
@@ -249,13 +249,13 @@ const CapacityBar: React.FC<CapacityBarProps> = ({ active, capacity, compact }) 
   const barHeight = compact ? 'h-1.5' : 'h-2';
   return (
     <div className="w-full">
-      <div className={`w-full rounded-full bg-gray-100 dark:bg-taupe/50 ${barHeight}`}>
+      <div className={`w-full rounded-full bg-stone-100 dark:bg-stone-800 ${barHeight}`}>
         <div
           className={`rounded-full bg-primary transition-all duration-500 ${barHeight}`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className={`text-gray-500 dark:text-cream/60 ${compact ? 'text-[11px] mt-1' : 'text-xs mt-1.5'}`}>
+      <p className={`text-gray-500 dark:text-stone-400 ${compact ? 'text-[11px] mt-1' : 'text-xs mt-1.5'}`}>
         {active}/{capacity} members
       </p>
     </div>
@@ -263,7 +263,7 @@ const CapacityBar: React.FC<CapacityBarProps> = ({ active, capacity, compact }) 
 };
 
 const GroupCapChip: React.FC = () => (
-  <span className="inline-flex items-center text-[10px] uppercase tracking-wider text-gray-400">
+  <span className="inline-flex items-center text-[10px] uppercase tracking-wider text-gray-400 dark:text-stone-400">
     {MAX_GROUPS} groups max
   </span>
 );
@@ -354,12 +354,12 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
   };
 
   return (
-    <main className="relative flex flex-col h-[calc(100vh-5rem)] bg-cream dark:bg-cream">
-      <div className="bg-white border-b border-gray-100 dark:border-taupe/40 px-5 py-4 flex items-center gap-3 shrink-0">
+    <main className="relative flex flex-col h-[calc(100vh-5rem)] bg-cream dark:bg-stone-950">
+      <div className="bg-white dark:bg-stone-900 border-b dark:border-stone-700 px-5 py-4 flex items-center gap-3 shrink-0">
         <button
           onClick={onBack}
           aria-label="Back to dashboard"
-          className="w-10 h-10 rounded-full bg-cream dark:bg-cream text-gray-700 dark:text-cream/80 flex items-center justify-center hover:bg-primary/10 hover:text-primary transition shrink-0"
+          className="w-10 h-10 rounded-full bg-cream dark:bg-stone-800 text-gray-700 dark:text-stone-300 flex items-center justify-center hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-warm-amber transition shrink-0"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -367,13 +367,13 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
           onClick={() => setDrawerOpen((open) => !open)}
           className="flex-1 min-w-0 text-left group"
         >
-          <h2 className="font-serif text-xl font-bold text-gray-900 dark:text-cream truncate group-hover:text-primary transition">
+          <h2 className="font-serif text-xl font-bold text-gray-900 dark:text-amber-100 truncate group-hover:text-primary transition">
             {group.displayName}
           </h2>
           <div className="flex items-center gap-1.5 mt-0.5">
             <BookOpen className="w-3.5 h-3.5 text-primary/70" />
             <span className="text-xs text-primary/70">{group.book}</span>
-            <span className="text-gray-300">·</span>
+            <span className="text-gray-300 dark:text-stone-400">·</span>
             <StatusPill status={group.status} />
           </div>
         </button>
@@ -391,7 +391,7 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
             }`}
           >
             {!msg.self && (
-              <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[11px] font-bold shrink-0">
+              <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-amber-100 flex items-center justify-center text-[11px] font-bold shrink-0">
                 {msg.initials}
               </div>
             )}
@@ -399,21 +399,21 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
               className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
                 msg.self
                   ? 'bg-primary text-white rounded-tr-none'
-                  : 'bg-white text-gray-800 rounded-tl-none shadow-sm border border-gray-100 dark:border-taupe/40'
+                  : 'bg-white dark:bg-stone-800 text-gray-800 dark:text-stone-200 rounded-tl-none shadow-sm border dark:border-stone-700'
               }`}
             >
               {!msg.self && (
-                <p className="text-[11px] font-semibold text-primary mb-0.5">
+                <p className="text-[11px] font-semibold text-primary dark:text-warm-amber mb-0.5">
                   {msg.author}
                 </p>
               )}
-              <p className="text-sm leading-relaxed">{msg.text}</p>
+              <p className="text-sm leading-relaxed dark:text-amber-100">{msg.text}</p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="bg-white border-t border-gray-100 dark:border-taupe/40 px-5 py-4 shrink-0">
+      <div className="bg-white dark:bg-stone-900 border-t dark:border-stone-700 px-5 py-4 shrink-0">
         <div className="flex items-center gap-3 max-w-2xl mx-auto">
           <input
             type="text"
@@ -421,7 +421,7 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Share a thought..."
-            className="flex-1 bg-cream dark:bg-cream text-sm text-gray-900 dark:text-cream placeholder-gray-400 dark:placeholder-cream/40 rounded-full px-5 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition"
+            className="flex-1 bg-cream dark:bg-stone-800 text-sm text-gray-900 dark:text-amber-100 placeholder-gray-400 dark:placeholder-stone-400 rounded-full px-5 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition"
           />
           <button
             onClick={sendMessage}
@@ -437,16 +437,16 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
       {drawerOpen && (
         <div className="absolute inset-0 z-40 flex flex-col">
           <button
-            className="flex-1 bg-black/20 backdrop-blur-sm"
+            className="flex-1 bg-black/40 backdrop-blur-sm"
             aria-label="Close drawer"
             onClick={() => setDrawerOpen(false)}
           />
-          <div className="bg-white rounded-t-3xl shadow-2xl p-6 max-h-[80%] overflow-y-auto">
-            <div className="w-12 h-1.5 rounded-full bg-gray-200 mx-auto mb-5" />
+          <div className="bg-white dark:bg-stone-900 rounded-t-3xl shadow-2xl p-6 max-h-[80%] overflow-y-auto">
+            <div className="w-12 h-1.5 rounded-full bg-gray-200 dark:bg-stone-700 mx-auto mb-5" />
             <div className="flex items-center justify-between mb-4">
               <button
                 onClick={() => setDrawerOpen(false)}
-                className="text-sm font-semibold text-gray-500 dark:text-cream/60 hover:text-primary transition"
+                className="text-sm font-semibold text-gray-500 dark:text-stone-300 hover:text-primary transition"
               >
                 Close
               </button>
@@ -460,7 +460,7 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
                   className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
                     drawerTab === tab
                       ? 'bg-primary text-white'
-                      : 'bg-gray-100 dark:bg-taupe/50 text-gray-600 hover:bg-gray-200'
+                      : 'bg-gray-100 dark:bg-stone-800 text-gray-600 dark:text-stone-200 hover:bg-gray-200 dark:hover:bg-stone-700'
                   }`}
                 >
                   {tab === 'overview' ? 'Overview' : 'Resources & Info'}
@@ -470,43 +470,43 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
 
             {drawerTab === 'overview' ? (
               <div className="space-y-5">
-                <div className="bg-primary/5 rounded-2xl p-5">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">
+                <div className="bg-primary/5 dark:bg-stone-800 rounded-2xl p-5">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
                     Current Chapter
                   </p>
-                  <p className="font-serif text-2xl font-bold text-primary mt-1">
+                  <p className="font-serif text-2xl font-bold text-primary dark:text-amber-100 mt-1">
                     {currentChapter}
                   </p>
                 </div>
 
-                <div className="flex items-start gap-4 bg-white rounded-2xl p-5 border border-gray-100 dark:border-taupe/40 shadow-sm">
+                <div className="flex items-start gap-4 bg-white dark:bg-stone-800 rounded-2xl p-5 border dark:border-stone-700 shadow-sm">
                   <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold shrink-0">
                     {getInitials(group.moderatorName)}
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
                       Moderator
                     </p>
-                    <p className="font-serif text-lg font-bold text-gray-900 dark:text-cream">
+                    <p className="font-serif text-lg font-bold text-gray-900 dark:text-amber-100">
                       {group.moderatorName}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                    <p className="text-sm text-gray-600 dark:text-stone-200 mt-1 leading-relaxed">
                       {modFirstName} has walked with this circle for two seasons, holding
                       space for honest questions.
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-primary/5 rounded-2xl p-5">
-                  <p className="text-sm font-semibold text-primary">
+                <div className="bg-primary/5 dark:bg-stone-800 rounded-2xl p-5">
+                  <p className="text-sm font-semibold text-primary dark:text-warm-amber">
                     This week's focus: {group.topic}
                   </p>
                   <ul className="mt-3 space-y-2">
-                    <li className="flex items-start gap-2 text-sm text-gray-700 dark:text-cream/80">
+                    <li className="flex items-start gap-2 text-sm text-gray-700 dark:text-stone-200">
                       <span className="mt-1.5 w-1 h-1 rounded-full bg-primary shrink-0" />
                       What word or phrase are you carrying into this week?
                     </li>
-                    <li className="flex items-start gap-2 text-sm text-gray-700 dark:text-cream/80">
+                    <li className="flex items-start gap-2 text-sm text-gray-700 dark:text-stone-200">
                       <span className="mt-1.5 w-1 h-1 rounded-full bg-primary shrink-0" />
                       Where did you sense God's presence recently?
                     </li>
@@ -515,23 +515,23 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
               </div>
             ) : (
               <div className="space-y-5">
-                <div className="bg-white rounded-2xl p-5 border border-gray-100 dark:border-taupe/40 shadow-sm">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 mb-3">
+                <div className="bg-white dark:bg-stone-800 rounded-2xl p-5 border dark:border-stone-700 shadow-sm">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber mb-3">
                     Group Details
                   </p>
-                  <div className="space-y-2 text-sm text-gray-700 dark:text-cream/80">
+                  <div className="space-y-2 text-sm text-gray-700 dark:text-stone-200">
                     <p>
-                      <span className="text-gray-500 dark:text-cream/60">Topic:</span> {group.topic}
+                      <span className="text-gray-500 dark:text-stone-400">Topic:</span> {group.topic}
                     </p>
                     <p>
-                      <span className="text-gray-500 dark:text-cream/60">Meets:</span> {group.meetingTime}
+                      <span className="text-gray-500 dark:text-stone-400">Meets:</span> {group.meetingTime}
                     </p>
                     <p>
-                      <span className="text-gray-500 dark:text-cream/60">Members:</span>{' '}
+                      <span className="text-gray-500 dark:text-stone-400">Members:</span>{' '}
                       {group.activeMemberCount}/{group.capacity}
                     </p>
                     <p>
-                      <span className="text-gray-500 dark:text-cream/60">Length:</span> 6-week study · ~60 min
+                      <span className="text-gray-500 dark:text-stone-400">Length:</span> 6-week study · ~60 min
                       sessions
                     </p>
                   </div>
@@ -547,7 +547,7 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
                   Join Zoom Session
                 </a>
 
-                <div className="bg-white rounded-2xl border border-gray-100 dark:border-taupe/40 shadow-sm overflow-hidden">
+                <div className="bg-white dark:bg-stone-800 rounded-2xl border dark:border-stone-700 shadow-sm overflow-hidden">
                   {[
                     { label: 'Study guide (PDF)', icon: FileText },
                     { label: 'Reading plan', icon: Link },
@@ -555,9 +555,9 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
                   ].map((resource, idx) => (
                     <button
                       key={idx}
-                      className="w-full flex items-center gap-3 px-5 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-cream/80 hover:bg-primary/5 transition border-b border-gray-100 dark:border-taupe/40 last:border-0"
+                      className="w-full flex items-center gap-3 px-5 py-3.5 text-left text-sm font-semibold text-gray-700 dark:text-stone-200 hover:bg-primary/5 dark:hover:bg-stone-700 transition border-b dark:border-stone-700 last:border-0"
                     >
-                      <resource.icon className="w-4 h-4 text-primary" />
+                      <resource.icon className="w-4 h-4 text-primary dark:text-warm-amber" />
                       {resource.label}
                     </button>
                   ))}
@@ -568,7 +568,7 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
             <div className="mt-8 space-y-3">
               <button
                 onClick={handleInvite}
-                className="w-full flex items-center justify-center gap-2 border border-primary/20 text-primary text-sm font-semibold rounded-xl py-3 hover:bg-primary/5 transition"
+                className="w-full flex items-center justify-center gap-2 border border-primary/20 dark:border-warm-amber/30 text-primary dark:text-warm-amber text-sm font-semibold rounded-xl py-3 hover:bg-primary/5 dark:hover:bg-stone-800 transition"
               >
                 <UserPlus className="w-4 h-4" />
                 {invited ? 'Invite link copied ✓' : 'Invite Others'}
@@ -576,7 +576,7 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
 
               <button
                 onClick={() => setConfirmLeaveId(group.id)}
-                className="w-full flex items-center justify-center gap-2 text-gray-500 dark:text-cream/60 text-sm font-semibold rounded-xl py-3 hover:bg-red-50 hover:text-red-700 transition"
+                className="w-full flex items-center justify-center gap-2 text-gray-500 dark:text-stone-300 text-sm font-semibold rounded-xl py-3 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition"
               >
                 <LogOut className="w-4 h-4" />
                 Leave Group
@@ -592,20 +592,20 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
             className="absolute inset-0 bg-black/40"
             onClick={() => setConfirmLeaveId(null)}
           />
-          <div className="relative w-full max-w-sm bg-white rounded-3xl p-7 shadow-2xl text-center">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 mb-2">
+          <div className="relative w-full max-w-sm bg-white dark:bg-stone-900 rounded-3xl p-7 shadow-2xl text-center">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber mb-2">
               Leaving circle
             </p>
-            <h3 className="font-serif text-2xl font-bold text-gray-900 dark:text-cream">
+            <h3 className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100">
               Are you sure you want to leave this circle?
             </h3>
-            <p className="text-sm text-gray-600 mt-3 leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-stone-300 mt-3 leading-relaxed">
               You can always rejoin if space opens up.
             </p>
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 onClick={() => setConfirmLeaveId(null)}
-                className="w-full bg-gray-100 dark:bg-taupe/50 text-gray-700 dark:text-cream/80 text-sm font-semibold rounded-xl py-3 hover:bg-gray-200 transition"
+                className="w-full bg-gray-100 dark:bg-stone-800 text-gray-700 dark:text-stone-200 text-sm font-semibold rounded-xl py-3 hover:bg-gray-200 dark:hover:bg-stone-700 transition"
               >
                 Stay
               </button>
@@ -707,19 +707,19 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
   };
 
   const Header = () => (
-    <header className="bg-white border-b border-gray-100 dark:border-taupe/40 px-6 py-5 sticky top-0 z-30">
+    <header className="bg-white dark:bg-stone-900 border-b dark:border-stone-700 px-6 py-5 sticky top-0 z-30">
       <div className="max-w-2xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+          <div className="w-11 h-11 rounded-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-warm-amber flex items-center justify-center">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="font-serif text-xl font-bold text-gray-900 dark:text-cream">Bible Study</h1>
-            <p className="text-xs text-gray-500 dark:text-cream/60 mt-0.5">Find your circle. Grow in the Word.</p>
+            <h1 className="font-serif text-xl font-bold text-gray-900 dark:text-amber-100">Bible Study</h1>
+            <p className="text-xs text-gray-500 dark:text-stone-300 mt-0.5">Find your circle. Grow in the Word.</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-600 hidden sm:inline">Hi, {getFirstName(user.name)}</span>
+          <span className="text-sm text-gray-600 dark:text-stone-300 hidden sm:inline">Hi, {getFirstName(user.name)}</span>
           {!browseOpen && (
             <button
               onClick={() => setBrowseOpen(true)}
@@ -735,31 +735,31 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
   );
 
   const ActiveGroupCard = ({ group }: { group: BibleStudyGroup }) => (
-    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-taupe/40 relative overflow-hidden">
+    <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 shadow-sm border dark:border-stone-700 relative overflow-hidden">
       <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-primary/30 via-primary/60 to-primary/30" />
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
             {group.book}
           </p>
-          <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-cream mt-1 leading-tight">
+          <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100 mt-1 leading-tight">
             {group.displayName}
           </h2>
         </div>
         <StatusPill status={group.status} />
       </div>
 
-      <p className="text-sm text-gray-500 dark:text-cream/60 mt-3 leading-relaxed">{group.topic}</p>
+      <p className="text-sm text-gray-500 dark:text-stone-300 mt-3 leading-relaxed">{group.topic}</p>
 
-      <div className="mt-5 flex flex-col gap-3 text-sm text-gray-600">
+      <div className="mt-5 flex flex-col gap-3 text-sm text-gray-600 dark:text-stone-200">
         <div className="flex items-center gap-2.5">
-          <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+          <span className="w-8 h-8 rounded-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-warm-amber flex items-center justify-center shrink-0">
             <User className="w-4 h-4" />
           </span>
           <span className="truncate">Led by {group.moderatorName}</span>
         </div>
         <div className="flex items-center gap-2.5">
-          <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+          <span className="w-8 h-8 rounded-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-warm-amber flex items-center justify-center shrink-0">
             <Clock className="w-4 h-4" />
           </span>
           <span>{group.meetingTime}</span>
@@ -771,7 +771,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
       </div>
 
       {atGroupLimit && (
-        <div className="mt-5 text-xs text-amber-700 bg-amber-50 rounded-xl px-3 py-2 inline-flex items-center">
+        <div className="mt-5 text-xs text-amber-700 dark:text-amber-200 bg-amber-50 dark:bg-amber-900/30 rounded-xl px-3 py-2 inline-flex items-center">
           You're at the {MAX_GROUPS}-group limit — leave one to join another.
         </div>
       )}
@@ -786,7 +786,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
       <div className="mt-4 text-center">
         <button
           onClick={() => setBrowseOpen(true)}
-          className="text-sm font-semibold text-primary underline underline-offset-4 hover:text-primary/90 transition"
+          className="text-sm font-semibold text-primary dark:text-warm-amber underline underline-offset-4 hover:text-primary/90 dark:hover:text-warm-amber/80 transition"
         >
           Find another group
         </button>
@@ -798,17 +798,17 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
     const joined = joinedIds.includes(group.id);
     const full = group.activeMemberCount >= group.capacity;
     return (
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-taupe/40 hover:shadow-md transition relative">
+      <div className="bg-white dark:bg-stone-900 rounded-2xl p-5 shadow-sm border dark:border-stone-700 hover:shadow-md transition relative">
         <div className="absolute top-5 right-5">
           <StatusPill status={group.status} />
         </div>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
           {group.book}
         </p>
-        <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-cream mt-1 pr-16">
+        <h3 className="font-serif text-lg font-bold text-gray-900 dark:text-amber-100 mt-1 pr-16">
           {group.displayName}
         </h3>
-        <p className="text-xs text-gray-500 dark:text-cream/60 mt-1">
+        <p className="text-xs text-gray-500 dark:text-stone-300 mt-1">
           Led by {group.moderatorName} · {group.meetingTime}
         </p>
         <div className="mt-4 max-w-[180px]">
@@ -818,14 +818,14 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
           {joined ? (
             <button
               onClick={() => handleLeave(group.id)}
-              className="w-full bg-primary/10 text-primary text-xs font-bold rounded-xl py-2.5 hover:bg-primary/15 transition"
+              className="w-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-warm-amber text-xs font-bold rounded-xl py-2.5 hover:bg-primary/15 dark:hover:bg-stone-700 transition"
             >
               Leave this circle
             </button>
           ) : full ? (
             <button
               disabled
-              className="w-full bg-gray-100 dark:bg-taupe/50 text-gray-400 text-xs font-bold rounded-xl py-2.5 cursor-not-allowed"
+              className="w-full bg-stone-800 dark:bg-stone-700 text-stone-400 dark:text-stone-500 text-xs font-bold rounded-xl py-2.5 cursor-not-allowed"
             >
               This circle is full
             </button>
@@ -858,15 +858,15 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
           className="absolute inset-0 bg-black/40"
           onClick={() => setSwapCandidateId(null)}
         />
-        <div className="relative w-full max-w-md bg-white rounded-3xl p-7 sm:p-8 shadow-2xl">
+        <div className="relative w-full max-w-md bg-white dark:bg-stone-900 rounded-3xl p-7 sm:p-8 shadow-2xl">
           <div className="flex items-start justify-between gap-4 mb-2">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
                 Drop to swap
               </p>
               <h3
                 id="swap-modal-heading"
-                className="font-serif text-2xl font-bold text-gray-900 dark:text-cream mt-1"
+                className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100 mt-1"
               >
                 Swap an Active Circle
               </h3>
@@ -874,16 +874,16 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
             <button
               onClick={() => setSwapCandidateId(null)}
               aria-label="Cancel swap"
-              className="w-9 h-9 rounded-full bg-gray-100 dark:bg-taupe/50 text-gray-500 dark:text-cream/60 flex items-center justify-center hover:bg-gray-200 transition shrink-0"
+              className="w-9 h-9 rounded-full bg-stone-800 dark:bg-stone-700 text-stone-400 dark:text-stone-300 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-stone-600 transition shrink-0"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <p className="text-sm text-gray-600 dark:text-stone-200 leading-relaxed">
             You can be part of {MAX_GROUPS} circles at a time. Choose one to drop to
             make room for{' '}
-            <span className="font-semibold text-primary">{candidate?.displayName}</span>.
+            <span className="font-semibold text-primary dark:text-warm-amber">{candidate?.displayName}</span>.
           </p>
 
           <div className="mt-6 space-y-3">
@@ -891,16 +891,16 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
               <button
                 key={g.id}
                 onClick={() => handleSwap(g.id)}
-                className="w-full flex items-center justify-between gap-4 bg-primary/5 hover:bg-primary/10 rounded-2xl p-4 transition text-left"
+                className="w-full flex items-center justify-between gap-4 bg-primary/5 dark:bg-stone-800 hover:bg-primary/10 dark:hover:bg-stone-700 rounded-2xl p-4 transition text-left"
               >
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
                     {g.book}
                   </p>
-                  <p className="font-serif text-base font-semibold text-gray-900 dark:text-cream truncate">
+                  <p className="font-serif text-base font-semibold text-gray-900 dark:text-amber-100 truncate">
                     {g.displayName}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-cream/60 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-stone-300 mt-1">
                     {g.activeMemberCount}/{g.capacity} members
                   </p>
                 </div>
@@ -913,7 +913,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
 
           <button
             onClick={() => setSwapCandidateId(null)}
-            className="mt-6 w-full bg-gray-100 dark:bg-taupe/50 text-gray-700 dark:text-cream/80 text-sm font-semibold rounded-xl py-3 hover:bg-gray-200 transition"
+            className="mt-6 w-full bg-stone-800 dark:bg-stone-700 text-gray-700 dark:text-stone-200 text-sm font-semibold rounded-xl py-3 hover:bg-gray-200 dark:hover:bg-stone-600 transition"
           >
             Cancel
           </button>
@@ -929,8 +929,8 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
         <div className="max-w-2xl mx-auto">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div>
-              <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-cream">Your Circles</h2>
-              <p className="text-xs text-gray-500 dark:text-cream/60 mt-0.5">Step into the group that gathered.</p>
+              <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100">Your Circles</h2>
+              <p className="text-xs text-gray-500 dark:text-stone-300 mt-0.5">Step into the group that gathered.</p>
             </div>
             <GroupCapChip />
           </div>
@@ -947,13 +947,13 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
   const Scenario2 = () => (
     <main className="px-6 py-20">
       <div className="max-w-md mx-auto flex flex-col items-center text-center">
-        <div className="w-24 h-24 rounded-full bg-primary/10 text-primary flex items-center justify-center shadow-sm">
+        <div className="w-24 h-24 rounded-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-warm-amber flex items-center justify-center shadow-sm">
           <Users className="w-10 h-10" />
         </div>
-        <h2 className="font-serif text-3xl font-bold text-gray-900 dark:text-cream mt-7">
+        <h2 className="font-serif text-3xl font-bold text-gray-900 dark:text-amber-100 mt-7">
           Not in any groups currently
         </h2>
-        <p className="text-sm text-gray-500 dark:text-cream/60 leading-relaxed max-w-xs mt-4">
+        <p className="text-sm text-gray-500 dark:text-stone-300 leading-relaxed max-w-xs mt-4">
           press the plus sign to look at any bible study groups you may be interested in.
         </p>
         <button
@@ -982,20 +982,20 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
         <div className="max-w-2xl mx-auto">
           <div className="flex items-start justify-between gap-4 mb-6">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
                 Matched to your book
               </p>
-              <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-cream mt-1">
+              <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100 mt-1">
                 Spaces studying {book}
               </h2>
             </div>
             <GroupCapChip />
           </div>
-          <p className="text-sm text-gray-500 dark:text-cream/60 mb-6">
+          <p className="text-sm text-gray-500 dark:text-stone-300 mb-6">
             Pick a circle to start growing together.
           </p>
           {fallback && (
-            <div className="mb-6 rounded-xl bg-gray-100 dark:bg-taupe/50/70 px-4 py-3 text-xs text-gray-600">
+            <div className="mb-6 rounded-xl bg-stone-800 dark:bg-stone-800 px-4 py-3 text-xs text-gray-600 dark:text-stone-300">
               We don't have a {book} circle open right now, but these groups are starting soon.
             </div>
           )}
@@ -1014,20 +1014,20 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => setBrowseOpen(false)}
-          className="group flex items-center gap-1.5 text-sm text-gray-500 dark:text-cream/60 hover:text-primary transition mb-6"
+          className="group flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary transition mb-6"
         >
-          <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-taupe/50 group-hover:bg-primary/10 flex items-center justify-center transition">
+          <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 group-hover:bg-primary/10 flex items-center justify-center transition">
             <ArrowLeft className="w-4 h-4" />
           </span>
           Back
         </button>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
           All circles
         </p>
-        <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-cream mt-1">
+        <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100 mt-1">
           Browse Bible study groups
         </h2>
-        <p className="text-sm text-gray-500 dark:text-cream/60 mt-1 mb-6">
+        <p className="text-sm text-gray-500 dark:text-stone-300 mt-1 mb-6">
           Choose a circle to begin your journey.
         </p>
         <div className="space-y-4">
@@ -1079,7 +1079,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
     : undefined;
 
   return (
-    <section className="min-h-screen bg-cream dark:bg-cream text-gray-900 dark:text-cream font-sans">
+    <section className="min-h-screen bg-cream dark:bg-stone-950 text-gray-900 dark:text-amber-100 font-sans">
       <Header />
       {renderContent()}
       <SwapModal />
@@ -1090,23 +1090,23 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
             className="absolute inset-0 bg-black/40"
             onClick={() => setConfirmJoinId(null)}
           />
-          <div className="relative w-full max-w-sm bg-white rounded-3xl p-7 shadow-2xl text-center">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 mb-2">
+          <div className="relative w-full max-w-sm bg-white dark:bg-stone-900 rounded-3xl p-7 shadow-2xl text-center">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber mb-2">
               Join circle
             </p>
-            <h3 className="font-serif text-2xl font-bold text-gray-900 dark:text-cream">
+            <h3 className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100">
               Join this circle?
             </h3>
-            <p className="font-serif text-lg text-primary mt-1">
+            <p className="font-serif text-lg text-primary dark:text-warm-amber mt-1">
               {joinCandidate.displayName}
             </p>
-            <p className="text-sm text-gray-600 mt-3 leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-stone-300 mt-3 leading-relaxed">
               You'll grow alongside {joinCandidate.activeMemberCount} others.
             </p>
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 onClick={() => setConfirmJoinId(null)}
-                className="w-full bg-gray-100 dark:bg-taupe/50 text-gray-700 dark:text-cream/80 text-sm font-semibold rounded-xl py-3 hover:bg-gray-200 transition"
+                className="w-full bg-gray-100 dark:bg-stone-800 text-gray-700 dark:text-stone-200 text-sm font-semibold rounded-xl py-3 hover:bg-gray-200 dark:hover:bg-stone-700 transition"
               >
                 Not yet
               </button>

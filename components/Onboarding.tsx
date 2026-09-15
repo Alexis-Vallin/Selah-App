@@ -100,7 +100,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
       type="button"
       onClick={() => setStep(prev => prev - 1)}
       aria-label="Go back"
-      className="absolute top-6 left-6 p-2 rounded-full hover:bg-gray-100 text-gray-800"
+      className="absolute top-6 left-6 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800 text-gray-800 dark:text-stone-100"
     >
       <ArrowLeft size={20} />
     </button>
@@ -111,15 +111,15 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
       <img src="/logo.png" alt="Selah" className="w-64 h-auto mb-2 rounded-2xl" />
       
       <div className="space-y-3">
-        <div className="space-y-1 bg-white/60 p-3.5 rounded-2xl border border-primary/10 shadow-xs max-w-sm mx-auto">
+        <div className="space-y-1 bg-white/60 dark:bg-stone-900/60 p-3.5 rounded-2xl border border-primary/10 dark:border-stone-700/50 shadow-xs max-w-sm mx-auto">
           <p className="font-serif italic text-secondary text-base md:text-lg leading-snug">
             "Spurring one another on in faith and community."
           </p>
-          <p className="font-sans text-xs text-gray-500 font-bold uppercase tracking-wider">— Hebrews 10:24-25</p>
+          <p className="font-sans text-xs text-gray-500 dark:text-stone-400 font-bold uppercase tracking-wider">— Hebrews 10:24-25</p>
         </div>
       </div>
 
-      <p className="font-sans text-gray-600 max-w-xs mx-auto leading-relaxed text-sm">
+      <p className="font-sans text-gray-600 dark:text-stone-300 max-w-xs mx-auto leading-relaxed text-sm">
         Connect with a global community of believers walking the same path, reading the Word, and praying together.
       </p>
 
@@ -133,10 +133,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     <div className="space-y-6 animate-fade-in">
       {renderBackButton()}
       <div>
-        <h2 className="font-serif text-2xl text-primary font-bold">
+        <h2 className="font-serif text-2xl text-primary dark:text-warm-amber font-bold">
           {isSignInMode ? 'Welcome back to Selah' : 'Create your account'}
         </h2>
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-gray-500 dark:text-stone-400 mt-1">
           {isSignInMode ? 'Enter your credentials to access your fellowship' : 'Join a global community of peer believers'}
         </p>
       </div>
@@ -144,13 +144,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
       <div className="space-y-4">
         {!isSignInMode && (
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">First Name</label>
+            <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">First Name</label>
             <input
               type="text"
               value={data.name}
               onChange={(e) => updateData('name', e.target.value)}
               placeholder="David"
-              className="w-full p-4 rounded-xl border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white text-sm"
+              className="w-full p-4 rounded-xl border border-gray-200 dark:border-stone-700 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white dark:bg-stone-900 text-sm text-gray-800 dark:text-stone-100"
             />
           </div>
         )}
@@ -424,7 +424,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col max-w-md mx-auto p-6 bg-cream">
+    <div className="min-h-screen flex flex-col max-w-md mx-auto p-6 bg-cream dark:bg-stone-950 relative">
       <div className="flex-1 flex flex-col justify-center">
         {step === 0 && renderWelcome()}
         {step === 1 && renderAccount()}
@@ -439,7 +439,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             <div
               key={i}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i <= step ? 'w-6 bg-primary' : 'w-2 bg-gray-300'
+                i <= step ? 'w-6 bg-primary' : 'w-2 bg-gray-300 dark:bg-stone-700'
               }`}
             />
           ))}
