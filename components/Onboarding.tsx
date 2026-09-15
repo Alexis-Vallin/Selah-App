@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { UserProfile, StruggleType } from '../types';
 import { STRUGGLES, POPULAR_BOOKS, OLD_TESTAMENT_BOOKS, NEW_TESTAMENT_BOOKS } from '../constants';
 import { Button } from './Button';
-import { Check, Mail, Lock, Info, Sparkles, BookOpen, Compass, ArrowRight } from 'lucide-react';
+import { Check, Mail, Lock, Info, Sparkles, BookOpen, Compass, ArrowRight, ArrowLeft } from 'lucide-react';
 
 interface OnboardingProps {
   onComplete: (profile: UserProfile) => void;
@@ -24,7 +24,6 @@ const BIBLICAL_INTERESTS_OPTIONS = [
 export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   const [step, setStep] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [noBookOptOut, setNoBookOptOut] = useState(false);
   const [isSignInMode, setIsSignInMode] = useState(false);
   const [customInterestText, setCustomInterestText] = useState('');
 
@@ -84,26 +83,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     }
   };
 
-  const handleOptOutBookChange = (checked: boolean) => {
-    setNoBookOptOut(checked);
-    if (checked) {
-      updateData('bibleBook', 'None / General Fellowship');
-    } else {
-      updateData('bibleBook', null);
-    }
-  };
-
-  const handleAccountSubmit = () => {
-    if (isSignInMode) {
-      // In sign-in mode, default name if not set
-      if (!data.name) {
-        const fallbackName = data.email ? data.email.split('@')[0] : 'Believer';
-        updateData('name', fallbackName.charAt(0).toUpperCase() + fallbackName.slice(1));
-      }
-    }
-    setStep(2);
-  };
-
   const handleCustomInterestChange = (val: string) => {
     setCustomInterestText(val);
     const current = data.biblicalInterests || [];
@@ -141,6 +120,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
   const renderAccount = () => (
     <div className="space-y-6 animate-fade-in">
+      {renderBackButton()}
       <div>
         <h2 className="font-serif text-2xl text-primary font-bold">
           {isSignInMode ? 'Welcome back to Selah' : 'Create your account'}
@@ -214,6 +194,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
   const renderLocation = () => (
     <div className="space-y-6 animate-fade-in">
+      {renderBackButton()}
       <div>
         <h2 className="font-serif text-2xl text-primary font-bold">Where are you joining us from?</h2>
         <p className="text-xs text-gray-500 mt-1">This helps us connect you with local prayer groups and events.</p>
@@ -232,16 +213,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         </div>
       </div>
 
-      <div className="flex justify-between items-center pt-2">
-        <button
-          onClick={() => {
-            updateData('location', ''); // Clear location if skipped
-            setStep(3);
-          }}
-          className="text-xs font-bold text-gray-500 hover:text-primary underline px-2 py-1"
-        >
-          Skip
-        </button>
+      <div className="pt-2">
         <Button
           onClick={() => setStep(3)}
         >
@@ -256,6 +228,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
     return (
       <div className="space-y-5 animate-fade-in">
+        {renderBackButton()}
         <div className="flex justify-between items-start">
           <div>
             <h2 className="font-serif text-2xl text-primary font-bold">Discussion Focus Areas</h2>
@@ -334,6 +307,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   const renderBibleBook = () => {
     return (
       <div className="space-y-5 animate-fade-in">
+        {renderBackButton()}
         <div className="flex flex-col items-start">
           <h2 className="font-serif text-2xl text-primary font-bold">Bible Study Matching</h2>
           <p className="text-gray-600 text-xs mt-1">Select what you are currently reading or studying.</p>
@@ -350,12 +324,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         <div className="space-y-3">
           <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">What book are you studying?</label>
           <select
-            disabled={noBookOptOut}
-            value={noBookOptOut ? 'None / General Fellowship' : (data.bibleBook || '')}
+            value={data.bibleBook || ''}
             onChange={(e) => updateData('bibleBook', e.target.value)}
-            className={`w-full p-4 rounded-xl bg-white border border-gray-200 focus:border-primary outline-none appearance-none shadow-sm text-sm font-medium ${
-              noBookOptOut ? 'opacity-50 cursor-not-allowed bg-gray-50' : 'text-gray-800'
-            }`}
+            className="w-full p-4 rounded-xl bg-white border border-gray-200 focus:border-primary outline-none appearance-none shadow-sm text-sm font-medium text-gray-800"
           >
             <option value="" disabled>Select a Book</option>
             <option value="General Discussion">Just browsing / General Fellowship</option>
@@ -369,21 +340,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
               {NEW_TESTAMENT_BOOKS.map(b => <option key={b} value={b}>{b}</option>)}
             </optgroup>
           </select>
-
-          {/* Opt-out Checkbox */}
-          <label className="flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-100 cursor-pointer text-xs text-gray-700 hover:bg-cream/40 transition-colors">
-            <input
-              type="checkbox"
-              checked={noBookOptOut}
-              onChange={(e) => handleOptOutBookChange(e.target.checked)}
-              className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary accent-primary"
-            />
-            <span className="font-medium">I am not reading any book at the moment</span>
-          </label>
         </div>
 
         <Button
-        disabled={!data.bibleBook && !noBookOptOut}
+        disabled={!data.bibleBook}
         onClick={() => setStep(4)}
       >
           Continue
@@ -398,6 +358,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
     return (
       <div className="space-y-5 animate-fade-in">
+        {renderBackButton()}
         <div className="flex flex-col items-start">
           <h2 className="font-serif text-2xl text-primary font-bold">Biblical Interests</h2>
           <p className="text-gray-600 text-xs mt-1">What are your current biblical interests?</p>
