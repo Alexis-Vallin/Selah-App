@@ -342,7 +342,7 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
         <button
           onClick={onBack}
           aria-label="Back to dashboard"
-          className="w-10 h-10 rounded-full bg-cream dark:bg-stone-800 text-gray-700 dark:text-stone-300 flex items-center justify-center hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-warm-amber transition shrink-0"
+          className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md text-stone-700 dark:text-stone-200 flex items-center justify-center hover:scale-105 active:scale-95 transition-all shrink-0"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -705,7 +705,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
 
   const Header = () => (
     <header className="bg-white dark:bg-stone-900 border-b dark:border-stone-700 px-6 py-5 sticky top-0 z-30">
-      <div className="max-w-2xl mx-auto flex items-center justify-between">
+      <div className="w-full flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-warm-amber flex items-center justify-center">
             <BookOpen className="w-5 h-5" />
@@ -923,7 +923,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
     if (activeGroups.length === 0) return <Scenario2 />;
     return (
       <main className="px-6 py-8">
-        <div className="max-w-2xl mx-auto">
+        <div className="w-full">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div>
               <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100">Your Circles</h2>
@@ -943,7 +943,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
 
   const Scenario2 = () => (
     <main className="px-6 py-20">
-      <div className="max-w-md mx-auto flex flex-col items-center text-center">
+      <div className="w-full flex flex-col items-center text-center">
         <div className="w-24 h-24 rounded-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-warm-amber flex items-center justify-center shadow-sm">
           <Users className="w-10 h-10" />
         </div>
@@ -987,7 +987,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
 
     return (
       <main className="px-6 py-8">
-        <div className="max-w-2xl mx-auto">
+        <div className="w-full">
           <div className="flex items-start justify-between gap-4 mb-6">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
@@ -1058,12 +1058,12 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
 
     return (
       <main className="px-6 py-8">
-        <div className="max-w-2xl mx-auto">
+        <div className="w-full">
           <button
             onClick={() => setBrowseOpen(false)}
-            className="group flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary transition mb-6"
+            className="group flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary transition mb-6 active:scale-95"
           >
-            <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 group-hover:bg-primary/10 flex items-center justify-center transition">
+            <span className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 group-hover:scale-105 transition-all">
               <ArrowLeft className="w-4 h-4" />
             </span>
             Back
@@ -1101,7 +1101,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
               <button
                 key={chip.key}
                 onClick={() => setFilters(prev => ({ ...prev, [chip.key]: !prev[chip.key] }))}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition active:scale-95 ${
                   filters[chip.key]
                     ? 'bg-primary text-white shadow-sm'
                     : 'bg-stone-100 dark:bg-stone-800 text-gray-500 dark:text-stone-400 border border-gray-200 dark:border-stone-700'
@@ -1182,7 +1182,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
     : undefined;
 
   return (
-    <section className="min-h-screen bg-cream dark:bg-stone-950 text-gray-900 dark:text-amber-100 font-sans">
+    <section className="min-h-screen bg-cream dark:bg-stone-950 text-gray-900 dark:text-amber-100 font-sans overflow-x-hidden select-none">
       <Header />
       {renderContent()}
       <SwapModal />

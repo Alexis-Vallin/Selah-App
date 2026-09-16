@@ -161,9 +161,9 @@ const EditProfileView: React.FC<SubViewProps> = ({ user, onBack, updateProfile, 
 
   return (
     <div className="space-y-6 pb-24 animate-fade-in">
-      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
-        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
-          <ArrowLeft size={16} />
+      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4 active:scale-95">
+        <span className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 hover:scale-105 transition-all">
+          <ArrowLeft size={18} />
         </span>
         Back to Profile
       </button>
@@ -206,9 +206,9 @@ const LocationEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile,
 
   return (
     <div className="space-y-6 pb-24 animate-fade-in">
-      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
-        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
-          <ArrowLeft size={16} />
+      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4 active:scale-95">
+        <span className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 hover:scale-105 transition-all">
+          <ArrowLeft size={18} />
         </span>
         Back to Profile
       </button>
@@ -251,9 +251,9 @@ const StrugglesEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile
 
   return (
     <div className="space-y-6 pb-24 animate-fade-in">
-      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
-        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
-          <ArrowLeft size={16} />
+      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4 active:scale-95">
+        <span className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 hover:scale-105 transition-all">
+          <ArrowLeft size={18} />
         </span>
         Back to Profile
       </button>
@@ -326,9 +326,9 @@ const InterestsEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile
 
   return (
     <div className="space-y-6 pb-24 animate-fade-in">
-      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
-        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
-          <ArrowLeft size={16} />
+      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4 active:scale-95">
+        <span className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 hover:scale-105 transition-all">
+          <ArrowLeft size={18} />
         </span>
         Back to Profile
       </button>
@@ -726,7 +726,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
                     setSelectedChannel(verseChannelId);
                     setActiveTab('discussions');
                   }}
-                  className="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2 px-3.5 rounded-full transition-all flex items-center gap-1.5"
+                  className="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2 px-3.5 rounded-full transition-all flex items-center gap-1.5 active:scale-95"
                 >
                   <MessageCircle size={14} />
                   Join Global Discussion
@@ -772,7 +772,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
             <div className="pt-2 flex justify-end">
               <button
                 onClick={handleToggleDailyPrayer}
-                className={`px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 shadow-xs ${dailyPrayer.hasPrayed
+                className={`px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 shadow-xs active:scale-95 ${dailyPrayer.hasPrayed
                   ? 'bg-primary dark:bg-stone-700 text-white ring-2 ring-primary/20'
                   : 'bg-white dark:bg-stone-900 border border-gray-300 dark:border-stone-600 text-gray-700 dark:text-stone-200 hover:border-primary'
                   }`}
@@ -791,7 +791,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
             {!showSubmitPrayer ? (
               <button
                 onClick={() => setShowSubmitPrayer(true)}
-                className="w-full py-2.5 px-4 bg-cream/40 dark:bg-stone-900/40 hover:bg-cream/80 dark:hover:bg-stone-900/80 border border-dashed border-gray-300 dark:border-stone-700 text-gray-600 dark:text-stone-300 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 px-4 bg-cream/40 dark:bg-stone-900/40 hover:bg-cream/80 dark:hover:bg-stone-900/80 border border-dashed border-gray-300 dark:border-stone-700 text-gray-600 dark:text-stone-300 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 active:scale-95"
               >
                 <Plus size={16} className="text-primary dark:text-warm-amber" />
                 Submit Your Own Prayer Request
@@ -887,7 +887,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
                     <button
                       onClick={() => handleJoinGroup(group)}
                       disabled={isJoined}
-                      className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all shrink-0 ml-3 ${
+                      className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all shrink-0 ml-3 active:scale-95 ${
                         isJoined
                           ? 'bg-gray-100 dark:bg-stone-800 text-gray-400 cursor-not-allowed'
                           : 'bg-primary text-white hover:bg-primary/90'
@@ -912,7 +912,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
               <button
                 key={ch.id}
                 onClick={() => setSelectedChannel(ch.id)}
-                className={`whitespace-nowrap text-xs px-3.5 py-2 rounded-xl font-bold transition-all shrink-0 flex items-center gap-1.5 ${isSelected
+                className={`whitespace-nowrap text-xs px-3.5 py-2 rounded-xl font-bold transition-all shrink-0 flex items-center gap-1.5 active:scale-95 ${isSelected
                   ? 'bg-primary dark:bg-stone-800 text-white shadow-xs'
                   : 'bg-white dark:bg-stone-900 text-gray-600 dark:text-stone-300 border border-gray-200 dark:border-stone-700 hover:border-gray-300'
                   }`}
@@ -977,7 +977,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
                         )
                       }));
                     }}
-                    className="text-[11px] text-gray-500 dark:text-stone-400 hover:text-primary dark:hover:text-amber-300 flex items-center gap-1 bg-cream dark:bg-stone-900 px-2.5 py-1 rounded-lg border dark:border-stone-700"
+                    className="text-[11px] text-gray-500 dark:text-stone-400 hover:text-primary dark:hover:text-amber-300 flex items-center gap-1 bg-cream dark:bg-stone-900 px-2.5 py-1 rounded-lg border dark:border-stone-700 active:scale-95 transition"
                   >
                     <ThumbsUp size={12} /> {post.likes} Amen
                   </button>
@@ -1174,9 +1174,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
 
     return (
       <div className="space-y-6 pb-24 animate-fade-in">
-      <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
-        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
-          <ArrowLeft size={16} />
+      <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4 active:scale-95">
+        <span className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 hover:scale-105 transition-all">
+          <ArrowLeft size={18} />
         </span>
         Back to Profile
       </button>
@@ -1220,9 +1220,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
 
   const renderNotificationsSettings = () => (
     <div className="space-y-6 pb-24 animate-fade-in">
-      <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
-        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
-          <ArrowLeft size={16} />
+      <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4 active:scale-95">
+        <span className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 hover:scale-105 transition-all">
+          <ArrowLeft size={18} />
         </span>
         Back to Profile
       </button>
@@ -1268,7 +1268,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
   );
 
   return (
-    <div className="min-h-screen bg-cream dark:bg-stone-950 max-w-md mx-auto relative flex flex-col transition-colors duration-300">
+    <div className="min-h-screen bg-cream dark:bg-stone-950 relative flex flex-col transition-colors duration-300 overflow-x-hidden select-none">
       <div className="flex-1 p-6 overflow-y-auto">
         {activeTab === 'home' && renderHome()}
         {activeTab === 'discussions' && renderDiscussions()}
@@ -1284,9 +1284,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
             {profileView === 'notifications' && renderNotificationsSettings()}
             {profileView === 'account' && (
               <div className="space-y-4 pb-24">
-                <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
-                  <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
-                    <ArrowLeft size={16} />
+                <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4 active:scale-95">
+                  <span className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 hover:scale-105 transition-all">
+                    <ArrowLeft size={18} />
                   </span>
                   Back to Profile
                 </button>
@@ -1298,9 +1298,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
             )}
             {profileView === 'help' && (
               <div className="space-y-4 pb-24">
-                <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
-                  <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
-                    <ArrowLeft size={16} />
+                <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4 active:scale-95">
+                  <span className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 hover:scale-105 transition-all">
+                    <ArrowLeft size={18} />
                   </span>
                   Back to Profile
                 </button>
@@ -1316,20 +1316,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       </div>
 
       {/* Streamlined 4-Tab Bottom Navigation */}
-      <div className="bg-white dark:bg-stone-900 border-t border-gray-200 dark:border-stone-700 px-4 py-2 flex justify-between items-center z-50 shadow-md">
-        <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center flex-1 py-1 ${activeTab === 'home' ? 'text-primary dark:text-warm-amber font-bold' : 'text-gray-400 dark:text-stone-500'}`}>
+      <div className="sticky bottom-0 bg-white dark:bg-stone-900 border-t border-gray-200 dark:border-stone-700 px-4 py-2 flex justify-between items-center z-50 shadow-md">
+        <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center flex-1 py-1 active:scale-95 transition-transform ${activeTab === 'home' ? 'text-primary dark:text-warm-amber font-bold' : 'text-gray-400 dark:text-stone-500'}`}>
           <Home size={20} />
           <span className="text-[10px] mt-0.5">Home</span>
         </button>
-        <button onClick={() => setActiveTab('discussions')} className={`flex flex-col items-center flex-1 py-1 ${activeTab === 'discussions' ? 'text-primary dark:text-warm-amber font-bold' : 'text-gray-400 dark:text-stone-500'}`}>
+        <button onClick={() => setActiveTab('discussions')} className={`flex flex-col items-center flex-1 py-1 active:scale-95 transition-transform ${activeTab === 'discussions' ? 'text-primary dark:text-warm-amber font-bold' : 'text-gray-400 dark:text-stone-500'}`}>
           <MessageCircle size={20} />
           <span className="text-[10px] mt-0.5">Discussions</span>
         </button>
-        <button onClick={() => setActiveTab('biblestudy')} className={`flex flex-col items-center flex-1 py-1 ${activeTab === 'biblestudy' ? 'text-primary dark:text-warm-amber font-bold' : 'text-gray-400 dark:text-stone-500'}`}>
+        <button onClick={() => setActiveTab('biblestudy')} className={`flex flex-col items-center flex-1 py-1 active:scale-95 transition-transform ${activeTab === 'biblestudy' ? 'text-primary dark:text-warm-amber font-bold' : 'text-gray-400 dark:text-stone-500'}`}>
           <BookOpen size={20} />
           <span className="text-[10px] mt-0.5">Bible Study</span>
         </button>
-        <button onClick={() => { setActiveTab('profile'); setProfileView('menu'); }} className={`flex flex-col items-center flex-1 py-1 ${activeTab === 'profile' ? 'text-primary dark:text-warm-amber font-bold' : 'text-gray-400 dark:text-stone-500'}`}>
+        <button onClick={() => { setActiveTab('profile'); setProfileView('menu'); }} className={`flex flex-col items-center flex-1 py-1 active:scale-95 transition-transform ${activeTab === 'profile' ? 'text-primary dark:text-warm-amber font-bold' : 'text-gray-400 dark:text-stone-500'}`}>
           <UserCircle size={20} />
           <span className="text-[10px] mt-0.5">Profile</span>
         </button>

@@ -132,27 +132,29 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      {status === UserStatus.MATCHING ? (
+    <div className="min-h-screen w-full bg-gray-100 dark:bg-black flex justify-center">
+      <div className="w-full max-w-md min-h-screen bg-cream dark:bg-stone-950 border-x border-gray-200 dark:border-stone-800 shadow-2xl relative overflow-x-hidden">
+        {status === UserStatus.MATCHING ? (
 
-        <div className="min-h-screen bg-cream flex flex-col items-center justify-center text-center p-6">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-            <Loader2 size={64} className="text-primary animate-spin relative z-10" />
+          <div className="min-h-screen flex flex-col items-center justify-center text-center p-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+              <Loader2 size={64} className="text-primary animate-spin relative z-10" />
+            </div>
+            <h2 className={`mt-8 font-serif text-2xl text-primary font-bold transition-opacity duration-300 ${fadeState ? 'opacity-100' : 'opacity-0'}`}>
+              {LOADING_PHRASES[phraseIndex]}
+            </h2>
+            <p className="mt-2 text-gray-600 font-sans max-w-xs text-sm">
+              Setting up your peer fellowship environment
+            </p>
           </div>
-          <h2 className={`mt-8 font-serif text-2xl text-primary font-bold transition-opacity duration-300 ${fadeState ? 'opacity-100' : 'opacity-0'}`}>
-            {LOADING_PHRASES[phraseIndex]}
-          </h2>
-          <p className="mt-2 text-gray-600 font-sans max-w-xs text-sm">
-            Setting up your peer fellowship environment
-          </p>
-        </div>
-      ) : status === UserStatus.DASHBOARD && user ? (
-        <Dashboard user={user} setUser={setUser as React.Dispatch<React.SetStateAction<UserProfile>>} onLogout={handleLogout} />
+        ) : status === UserStatus.DASHBOARD && user ? (
+          <Dashboard user={user} setUser={setUser as React.Dispatch<React.SetStateAction<UserProfile>>} onLogout={handleLogout} />
 
-      ) : (
-        <Onboarding onComplete={handleOnboardingComplete} />
-      )}
-    </>
+        ) : (
+          <Onboarding onComplete={handleOnboardingComplete} />
+        )}
+      </div>
+    </div>
   );
 }

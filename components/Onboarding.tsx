@@ -130,7 +130,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
       type="button"
       onClick={() => setStep(prev => prev - 1)}
       aria-label="Go back"
-      className="absolute top-6 left-6 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800 text-gray-800 dark:text-stone-100"
+      className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center justify-center text-stone-700 dark:text-stone-200 hover:scale-105 active:scale-95 transition-all mb-6"
     >
       <ArrowLeft size={20} />
     </button>
@@ -544,7 +544,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col max-w-md mx-auto p-6 bg-cream dark:bg-stone-950 relative">
+    <div className="min-h-screen flex flex-col p-6 bg-cream dark:bg-stone-950 relative overflow-x-hidden select-none">
       <div className="flex-1 flex flex-col justify-center">
         {step === 0 && renderWelcome()}
         {step === 1 && renderAccount()}
