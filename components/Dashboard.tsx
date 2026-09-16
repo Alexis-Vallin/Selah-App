@@ -16,6 +16,7 @@ import {
   Moon,
   Plus,
   Send,
+  Search,
   Settings,
   ShieldCheck,
   Sun,
@@ -26,11 +27,110 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { STRUGGLES } from '../constants';
-import { generateScriptureOfTheDay } from '../services/geminiService';
 import { CommunityPost, PrayerEntry, StruggleType, UserProfile } from '../types';
 import { BibleStudy } from './BibleStudy';
 import { Button } from './Button';
 
+const DAILY_VERSES: { verseText: string; reference: string }[] = [
+  { verseText: 'Trust in the LORD with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.', reference: 'Proverbs 3:5-6' },
+  { verseText: 'I can do all this through him who gives me strength.', reference: 'Philippians 4:13' },
+  { verseText: 'For I know the plans I have for you, declares the LORD, plans to prosper you and not to harm you, plans to give you hope and a future.', reference: 'Jeremiah 29:11' },
+  { verseText: 'The LORD is my shepherd, I lack nothing. He makes me lie down in green pastures, he leads me beside quiet waters, he refreshes my soul.', reference: 'Psalm 23:1-3' },
+  { verseText: 'Be strong and courageous. Do not be afraid; do not be discouraged, for the LORD your God will be with you wherever you go.', reference: 'Joshua 1:9' },
+  { verseText: 'And we know that in all things God works for the good of those who love him, who have been called according to his purpose.', reference: 'Romans 8:28' },
+  { verseText: 'The LORD is my light and my salvation—whom shall I fear? The LORD is the stronghold of my life—of whom shall I be afraid?', reference: 'Psalm 27:1' },
+  { verseText: 'Commit your way to the LORD; trust in him and he will do this: He will make your righteous reward shine like the dawn, your vindication like the noonday sun.', reference: 'Psalm 37:5-6' },
+  { verseText: 'So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.', reference: 'Isaiah 41:10' },
+  { verseText: 'Love is patient, love is kind. It does not envy, it does not boast, it is not proud. It does not dishonor others, it is not self-seeking, it is not easily angered, it keeps no record of wrongs.', reference: '1 Corinthians 13:4-5' },
+  { verseText: 'For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.', reference: 'John 3:16' },
+  { verseText: 'The LORD is close to the brokenhearted and saves those who are crushed in spirit.', reference: 'Psalm 34:18' },
+  { verseText: 'Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.', reference: 'Philippians 4:6' },
+  { verseText: 'He has shown you, O mortal, what is good. And what does the LORD require of you? To act justly and to love mercy and to walk humbly with your God.', reference: 'Micah 6:8' },
+  { verseText: 'Cast all your anxiety on him because he cares for you.', reference: '1 Peter 5:7' },
+  { verseText: 'But those who hope in the LORD will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.', reference: 'Isaiah 40:31' },
+  { verseText: 'You will keep in perfect peace those whose minds are steadfast, because they trust in you.', reference: 'Isaiah 26:3' },
+  { verseText: 'And let us consider how we may spur one another on toward love and good deeds, not giving up meeting together, as some are in the habit of doing, but encouraging one another.', reference: 'Hebrews 10:24-25' },
+  { verseText: 'When I am afraid, I put my trust in you.', reference: 'Psalm 56:3' },
+  { verseText: 'The Lord is not slow in keeping his promise, as some understand slowness. Instead he is patient with you, not wanting anyone to perish, but everyone to come to repentance.', reference: '2 Peter 3:9' },
+  { verseText: 'Therefore do not worry about tomorrow, for tomorrow will worry about itself. Each day has enough trouble of its own.', reference: 'Matthew 6:34' },
+  { verseText: 'I have told you these things, so that in me you may have peace. In this world you will have trouble. But take heart! I have overcome the world.', reference: 'John 16:33' },
+  { verseText: 'Let love and faithfulness never leave you; bind them around your neck, write them on the tablet of your heart.', reference: 'Proverbs 3:3' },
+  { verseText: 'Rejoice always, pray continually, give thanks in all circumstances; for this is God\'s will for you in Christ Jesus.', reference: '1 Thessalonians 5:16-18' },
+  { verseText: 'But seek first his kingdom and his righteousness, and all these things will be given to you as well.', reference: 'Matthew 6:33' },
+  { verseText: 'Taste and see that the LORD is good; blessed is the one who takes refuge in him.', reference: 'Psalm 34:8' },
+  { verseText: 'He gives strength to the weary and increases the power of the weak.', reference: 'Isaiah 40:29' },
+  { verseText: 'Come to me, all you who are weary and burdened, and I will give you rest.', reference: 'Matthew 11:28' },
+  { verseText: 'The grass withers and the flowers fall, but the word of our God endures forever.', reference: 'Isaiah 40:8' },
+  { verseText: 'And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus.', reference: 'Philippians 4:7' },
+];
+
+const getDailyVerse = (): { verseText: string; reference: string } => {
+  const dayOfYear = Math.ceil((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+  return DAILY_VERSES[dayOfYear % DAILY_VERSES.length];
+};
+
+const getVerseChannelId = (reference: string): string => {
+  return 'verse-' + reference.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+};
+
+const SEARCHABLE_GROUPS: {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  seedPosts: CommunityPost[];
+}[] = [
+  {
+    id: 'group-anxiety-peace',
+    name: 'Anxiety & Peace',
+    category: 'Support Group',
+    description: 'Finding God\'s peace amidst anxiety and worry',
+    seedPosts: [
+      { id: 'ap1', author: 'Grace M.', content: 'Philippians 4:6-7 has been my anchor this week. Praying for everyone struggling with anxiety here.', timestamp: Date.now() - 7200000, likes: 15 },
+      { id: 'ap2', author: 'Daniel R.', content: 'Therapy + prayer combo is changing my life. Anyone else walking this path?', timestamp: Date.now() - 3600000, likes: 9 }
+    ]
+  },
+  {
+    id: 'group-relationships-marriage',
+    name: 'Relationships & Marriage',
+    category: 'Support Group',
+    description: 'Biblical wisdom for dating, marriage, and family',
+    seedPosts: [
+      { id: 'rm1', author: 'Sarah J.', content: 'Marriage counseling saved our relationship. Grateful for God\'s grace in the hard seasons.', timestamp: Date.now() - 5400000, likes: 12 },
+      { id: 'rm2', author: 'Michael K.', content: 'Ephesians 4:26 — don\'t let the sun go down on your anger. Easier said than done!', timestamp: Date.now() - 1800000, likes: 7 }
+    ]
+  },
+  {
+    id: 'group-faith-doubt',
+    name: 'Faith & Doubt',
+    category: 'Support Group',
+    description: 'Asking hard questions and finding honest faith',
+    seedPosts: [
+      { id: 'fd1', author: 'Thomas W.', content: 'Doubt isn\'t the opposite of faith — indifference is. Glad we can wrestle honestly here.', timestamp: Date.now() - 7200000, likes: 18 },
+      { id: 'fd2', author: 'Rachel B.', content: 'Reading "The Case for Christ" right now. Anyone want to discuss it?', timestamp: Date.now() - 3600000, likes: 6 }
+    ]
+  },
+  {
+    id: 'group-purpose-calling',
+    name: 'Purpose & Calling',
+    category: 'Support Group',
+    description: 'Discerning God\'s calling for your life and career',
+    seedPosts: [
+      { id: 'pc1', author: 'David K.', content: 'Jeremiah 29:11 keeps me grounded when I\'m unsure about my career direction.', timestamp: Date.now() - 5400000, likes: 14 },
+      { id: 'pc2', author: 'Esther L.', content: 'Left my corporate job to start a ministry. Scariest and best decision ever.', timestamp: Date.now() - 1800000, likes: 11 }
+    ]
+  },
+  {
+    id: 'group-grief-healing',
+    name: 'Grief & Healing',
+    category: 'Support Group',
+    description: 'Finding comfort and community in seasons of loss',
+    seedPosts: [
+      { id: 'gh1', author: 'Martha J.', content: 'Psalm 34:18 — The Lord is close to the brokenhearted. Lost my mom last month. Thank you for praying.', timestamp: Date.now() - 7200000, likes: 22 },
+      { id: 'gh2', author: 'Paul M.', content: 'Grief support group at church has been a lifeline. You\'re not alone in your loss.', timestamp: Date.now() - 3600000, likes: 10 }
+    ]
+  }
+];
 
 interface DashboardProps {
   user: UserProfile;
@@ -55,7 +155,7 @@ const EditProfileView: React.FC<SubViewProps> = ({ user, onBack, updateProfile, 
   const handleSave = () => {
     updateProfile('name', name);
     updateProfile('bio', bio);
-    persistUserEdits({ name });
+    persistUserEdits({ name, bio });
     onBack();
   };
 
@@ -72,7 +172,7 @@ const EditProfileView: React.FC<SubViewProps> = ({ user, onBack, updateProfile, 
       <div className="space-y-4">
         <div>
           <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">Name</label>
-          <input value={name} onChange={e => setName(e.target.value)} className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary" />
+          <input value={name} onChange={e => setName(e.target.value)} className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-card-warm text-gray-800 dark:text-stone-100 outline-none focus:border-primary" />
         </div>
 
         <div>
@@ -82,7 +182,7 @@ const EditProfileView: React.FC<SubViewProps> = ({ user, onBack, updateProfile, 
             onChange={e => setBio(e.target.value)}
             maxLength={200}
             placeholder="Share a little about your faith walk..."
-            className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary h-28 resize-none"
+            className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-card-warm text-gray-800 dark:text-stone-100 outline-none focus:border-primary h-28 resize-none"
           />
         </div>
       </div>
@@ -121,7 +221,7 @@ const LocationEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile,
             value={localLocation}
             onChange={e => setLocalLocation(e.target.value)}
             placeholder="e.g., London, UK"
-            className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
+            className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-card-warm text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
           />
         </div>
         <p className="text-[11px] text-gray-500 dark:text-stone-400 leading-relaxed">This helps us connect you with local prayer groups and events.</p>
@@ -168,7 +268,7 @@ const StrugglesEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile
               onClick={() => toggle(s)}
               className={`w-full text-left p-3.5 rounded-xl transition-all border flex justify-between items-center text-xs ${isSelected
                 ? 'bg-primary dark:bg-stone-800 text-white border-primary shadow-xs font-bold'
-                : 'bg-white dark:bg-stone-900 border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200'
+                : 'bg-white dark:bg-card-warm border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200'
                 }`}
             >
               <span>{s}</span>
@@ -243,7 +343,7 @@ const InterestsEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile
               onClick={() => toggle(opt)}
               className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${isSelected
                 ? 'bg-primary dark:bg-stone-800 text-white border-primary shadow-xs'
-                : 'bg-white dark:bg-stone-900 border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200'
+                : 'bg-white dark:bg-card-warm border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200'
                 }`}
             >
               {opt}
@@ -261,7 +361,7 @@ const InterestsEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile
             onChange={e => setCustomInterest(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') addCustomInterest(); }}
             placeholder="e.g., Worship Music, Church History"
-            className="flex-1 p-3 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
+            className="flex-1 p-3 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-card-warm text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
           />
           <Button onClick={addCustomInterest}>Add</Button>
         </div>
@@ -291,13 +391,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
   const [profileView, setProfileView] = useState<ProfileView>('menu');
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     try {
-      return localStorage.getItem('selah_theme') === 'dark';
+      if (!user.email) return false;
+      const raw = localStorage.getItem(`user_${user.email.toLowerCase()}`);
+      if (!raw) return false;
+      const blob = JSON.parse(raw);
+      return blob.theme === 'dark';
     } catch {
       return false;
     }
   });
 
-  const [scripture, setScripture] = useState<{ verseText: string, reference: string } | null>(null);
+  const [scripture] = useState(getDailyVerse());
+  const verseChannelId = getVerseChannelId(scripture.reference);
 
   // Single "Prayer Request of the Day" State
   const [dailyPrayer, setDailyPrayer] = useState({
@@ -319,8 +424,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
   // User's personal prayer journal — persisted to localStorage
   const [userPrayers, setUserPrayers] = useState<PrayerEntry[]>(() => {
     try {
-      const stored = localStorage.getItem('selah_user_prayers');
-      return stored ? JSON.parse(stored) : [];
+      if (!user.email) return [];
+      const raw = localStorage.getItem(`user_${user.email.toLowerCase()}`);
+      if (!raw) return [];
+      const blob = JSON.parse(raw);
+      return blob.prayers || [];
     } catch {
       return [];
     }
@@ -337,9 +445,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     'general-fellowship': [
       { id: 'gf1', author: 'David K.', content: 'Grateful to join this digital table. God is moving in incredible ways across our global community.', timestamp: Date.now() - 7200000, likes: 11 },
       { id: 'gf2', author: 'Grace M.', content: 'Encouraging thought for today: Remember to give thanks for the small blessings and quiet moments of prayer.', timestamp: Date.now() - 3600000, likes: 9 }
+    ],
+    [verseChannelId]: [
+      { id: 'vv1', author: 'Pastor Mark', content: 'What a powerful reminder for us today. How is this verse speaking to your heart?', timestamp: Date.now() - 3600000, likes: 7, verseTag: scripture.reference },
+      { id: 'vv2', author: 'Sarah J.', content: 'This passage gave me so much peace this morning. Praying it blesses someone here too.', timestamp: Date.now() - 1800000, likes: 5, verseTag: scripture.reference }
     ]
   });
   const [newChannelPost, setNewChannelPost] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [joinedGroupIds, setJoinedGroupIds] = useState<string[]>(() => {
+    try {
+      if (!user.email) return [];
+      const raw = localStorage.getItem(`user_${user.email.toLowerCase()}`);
+      if (!raw) return [];
+      const blob = JSON.parse(raw);
+      return blob.joinedDiscussionGroups || [];
+    } catch {
+      return [];
+    }
+  });
 
   // Sync Dark Mode class with root document
   useEffect(() => {
@@ -350,8 +474,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     }
     try {
       localStorage.setItem('selah_theme', isDarkMode ? 'dark' : 'light');
+      if (user.email) {
+        const key = `user_${user.email.toLowerCase()}`;
+        const raw = localStorage.getItem(key);
+        const blob = raw ? JSON.parse(raw) : {};
+        blob.theme = isDarkMode ? 'dark' : 'light';
+        localStorage.setItem(key, JSON.stringify(blob));
+      }
     } catch { /* ignore */ }
-  }, [isDarkMode]);
+  }, [isDarkMode, user.email]);
 
   // Profile sub-view back navigation via browser history
   useEffect(() => {
@@ -394,7 +525,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     };
     const updated = [newPrayer, ...userPrayers];
     setUserPrayers(updated);
-    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
+    persistPrayers(updated);
     setPrayerSubmittedNotice("Your prayer request has been saved to your prayer journal. May God bless you!");
     setUserPrayerText('');
     setShowSubmitPrayer(false);
@@ -406,7 +537,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       p.id === id ? { ...p, answered: !p.answered } : p
     );
     setUserPrayers(updated);
-    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
+    persistPrayers(updated);
   };
 
   const archivePrayer = (id: string) => {
@@ -414,13 +545,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       p.id === id ? { ...p, archived: true } : p
     );
     setUserPrayers(updated);
-    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
+    persistPrayers(updated);
   };
 
   const deletePrayer = (id: string) => {
     const updated = userPrayers.filter(p => p.id !== id);
     setUserPrayers(updated);
-    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
+    persistPrayers(updated);
   };
 
   const restorePrayer = (id: string) => {
@@ -428,7 +559,34 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       p.id === id ? { ...p, archived: false } : p
     );
     setUserPrayers(updated);
-    localStorage.setItem('selah_user_prayers', JSON.stringify(updated));
+    persistPrayers(updated);
+  };
+
+  const handleJoinGroup = (group: typeof SEARCHABLE_GROUPS[0]) => {
+    // Add to joined groups state + localStorage
+    setJoinedGroupIds(prev => {
+      const updated = [...prev, group.id];
+      if (user.email) {
+        try {
+          const key = `user_${user.email.toLowerCase()}`;
+          const raw = localStorage.getItem(key);
+          const blob = raw ? JSON.parse(raw) : {};
+          blob.joinedDiscussionGroups = updated;
+          localStorage.setItem(key, JSON.stringify(blob));
+        } catch { /* ignore */ }
+      }
+      return updated;
+    });
+
+    // Seed the channel with posts if not already present
+    setChannelPosts(prev => {
+      if (prev[group.id]) return prev;
+      return { ...prev, [group.id]: group.seedPosts };
+    });
+
+    // Clear search and switch to the new channel
+    setSearchQuery('');
+    setSelectedChannel(group.id);
   };
 
   const handlePostToChannel = () => {
@@ -438,7 +596,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       author: user.name || 'Anonymous Believer',
       content: newChannelPost.trim(),
       timestamp: Date.now(),
-      likes: 0
+      likes: 0,
+      verseTag: selectedChannel === verseChannelId ? scripture.reference : undefined
     };
     setChannelPosts(prev => ({
       ...prev,
@@ -454,18 +613,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
   // Persist editable profile fields to localStorage so they survive reloads
   // and can be hydrated by App.tsx on next mount.
   const persistUserEdits = (updates: Partial<UserProfile>) => {
-    if (updates.name !== undefined) {
-      localStorage.setItem('selah_user_name', updates.name);
-    }
-    if (updates.location !== undefined) {
-      localStorage.setItem('selah_user_location', updates.location || '');
-    }
-    if (updates.struggles !== undefined) {
-      localStorage.setItem('selah_user_struggles', JSON.stringify(updates.struggles));
-    }
-    if (updates.biblicalInterests !== undefined) {
-      localStorage.setItem('selah_user_interests', JSON.stringify(updates.biblicalInterests));
-    }
+    if (!user.email) return;
+    try {
+      const key = `user_${user.email.toLowerCase()}`;
+      const raw = localStorage.getItem(key);
+      const blob = raw ? JSON.parse(raw) : {};
+      blob.profile = { ...blob.profile, ...updates };
+      localStorage.setItem(key, JSON.stringify(blob));
+    } catch { /* ignore */ }
+  };
+
+  const persistPrayers = (prayers: PrayerEntry[]) => {
+    if (!user.email) return;
+    try {
+      const key = `user_${user.email.toLowerCase()}`;
+      const raw = localStorage.getItem(key);
+      const blob = raw ? JSON.parse(raw) : {};
+      blob.prayers = prayers;
+      localStorage.setItem(key, JSON.stringify(blob));
+    } catch { /* ignore */ }
   };
 
   // Derive channels list with automatic fallback to General Fellowship
@@ -473,7 +639,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
   const userInterestsList = user.biblicalInterests || [];
 
   const channels = [
+    { id: verseChannelId, name: `📌 ${scripture.reference}`, category: "Today's Verse" },
     { id: 'daily-verse', name: '📌 Daily Scripture Reflections', category: 'Global' },
+    // Joined discussion groups as pinned hashtag pills
+    ...joinedGroupIds.map(id => {
+      const group = SEARCHABLE_GROUPS.find(g => g.id === id);
+      return group
+        ? { id: group.id, name: `# 📌 ${group.name}`, category: group.category }
+        : null;
+    }).filter(Boolean) as { id: string; name: string; category: string }[],
     { id: 'general-fellowship', name: 'General Fellowship', category: 'Global' },
     ...(user.wantsGroupMatch ? userStrugglesList.map(s => ({
       id: `struggle-${s.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
@@ -489,7 +663,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
 
   // Helper menu card
   const MenuCard = ({ icon: Icon, title, subtitle, onClick, isDanger }: any) => (
-    <button onClick={onClick} className="w-full bg-white dark:bg-stone-900 p-4 rounded-xl shadow-xs border border-gray-100 dark:border-stone-700/80 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-stone-800/50 transition">
+    <button onClick={onClick} className="w-full bg-white dark:bg-card-warm p-4 rounded-xl shadow-xs border border-gray-100 dark:border-stone-700/80 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-stone-800/50 transition">
       <div className={`p-2 rounded-full ${isDanger ? 'bg-red-50 dark:bg-red-950/50 text-red-500' : 'bg-primary/5 dark:bg-warm-amber/10 text-primary dark:text-warm-amber'}`}>
         <Icon size={22} />
       </div>
@@ -548,7 +722,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <span className="text-xs font-bold text-accent dark:text-amber-300">{scripture.reference}</span>
                 <button
-                  onClick={() => setActiveTab('discussions')}
+                  onClick={() => {
+                    setSelectedChannel(verseChannelId);
+                    setActiveTab('discussions');
+                  }}
                   className="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2 px-3.5 rounded-full transition-all flex items-center gap-1.5"
                 >
                   <MessageCircle size={14} />
@@ -681,6 +858,52 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
           </span>
         </div>
 
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search discussion groups..."
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-card-warm text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
+          />
+        </div>
+
+        {/* Search Results */}
+        {searchQuery.trim() && (
+          <div className="space-y-2">
+            <p className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-stone-400 font-bold">Search Results</p>
+            {SEARCHABLE_GROUPS
+              .filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase()) || g.description.toLowerCase().includes(searchQuery.toLowerCase()))
+              .map(group => {
+                const isJoined = joinedGroupIds.includes(group.id);
+                return (
+                  <div key={group.id} className="bg-white dark:bg-card-warm p-3.5 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-800 dark:text-stone-100">{group.name}</h4>
+                      <p className="text-[11px] text-gray-500 dark:text-stone-400">{group.description}</p>
+                    </div>
+                    <button
+                      onClick={() => handleJoinGroup(group)}
+                      disabled={isJoined}
+                      className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all shrink-0 ml-3 ${
+                        isJoined
+                          ? 'bg-gray-100 dark:bg-stone-800 text-gray-400 cursor-not-allowed'
+                          : 'bg-primary text-white hover:bg-primary/90'
+                      }`}
+                    >
+                      {isJoined ? 'Joined' : 'Join Group'}
+                    </button>
+                  </div>
+                );
+              })}
+            {SEARCHABLE_GROUPS.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase()) || g.description.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+              <p className="text-xs text-gray-500 dark:text-stone-400 text-center py-3">No groups found. Try "anxiety", "faith", "marriage"...</p>
+            )}
+          </div>
+        )}
+
         {/* Channel Selector Bar */}
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
           {channels.map((ch) => {
@@ -713,32 +936,55 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
           <span className="text-[11px] text-primary dark:text-warm-amber bg-primary/5 dark:bg-stone-950/60 px-2.5 py-1 rounded-full font-semibold">Active</span>
         </div>
 
+        {/* Pinned Verse for Verse Channel */}
+        {selectedChannel === verseChannelId && (
+          <div className="bg-primary dark:bg-stone-800 rounded-2xl p-5 text-white shadow-md border border-primary/20 dark:border-stone-700/50">
+            <div className="flex items-center gap-2 mb-2">
+              <BookOpen size={16} className="text-accent dark:text-amber-300" />
+              <span className="text-[10px] uppercase tracking-widest text-white/70 dark:text-warm-amber/70 font-semibold">Today's Verse</span>
+            </div>
+            <p className="font-serif text-sm md:text-base leading-relaxed italic mb-2">"{scripture.verseText}"</p>
+            <span className="text-xs font-bold text-accent dark:text-amber-300">{scripture.reference}</span>
+          </div>
+        )}
+
         {/* Posts Stream */}
         <div className="space-y-3 min-h-[35vh]">
-          {currentPosts.map((post) => (
-            <div key={post.id} className="bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs space-y-2">
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-primary dark:text-warm-amber">{post.author}</span>
-                <span className="text-gray-400 dark:text-stone-500 text-[10px]">{new Date(post.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-              </div>
-              <p className="text-xs text-gray-700 dark:text-stone-200 leading-relaxed">{post.content}</p>
-              <div className="flex justify-end pt-1">
-                <button
-                  onClick={() => {
-                    setChannelPosts(prev => ({
-                      ...prev,
-                      [selectedChannel]: (prev[selectedChannel] || []).map(p =>
-                        p.id === post.id ? { ...p, likes: p.likes + 1 } : p
-                      )
-                    }));
-                  }}
-                  className="text-[11px] text-gray-500 dark:text-stone-400 hover:text-primary dark:hover:text-amber-300 flex items-center gap-1 bg-cream dark:bg-stone-900 px-2.5 py-1 rounded-lg border dark:border-stone-700"
-                >
-                  <ThumbsUp size={12} /> {post.likes} Amen
-                </button>
-              </div>
+          {currentPosts.length === 0 ? (
+            <div className="bg-white dark:bg-card-warm p-8 rounded-xl border border-gray-100 dark:border-stone-700/80 text-center space-y-3">
+              <MessageCircle size={32} className="text-gray-300 dark:text-stone-600 mx-auto" />
+              <p className="text-sm text-gray-600 dark:text-stone-400 leading-relaxed">
+                {selectedChannel === verseChannelId
+                  ? `No conversations yet on ${scripture.reference}. Be the first to share what this verse means to you!`
+                  : 'No posts in this channel yet. Start the conversation!'}
+              </p>
             </div>
-          ))}
+          ) : (
+            currentPosts.map((post) => (
+              <div key={post.id} className="bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs space-y-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold text-primary dark:text-warm-amber">{post.author}</span>
+                  <span className="text-gray-400 dark:text-stone-500 text-[10px]">{new Date(post.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+                <p className="text-xs text-gray-700 dark:text-stone-200 leading-relaxed">{post.content}</p>
+                <div className="flex justify-end pt-1">
+                  <button
+                    onClick={() => {
+                      setChannelPosts(prev => ({
+                        ...prev,
+                        [selectedChannel]: (prev[selectedChannel] || []).map(p =>
+                          p.id === post.id ? { ...p, likes: p.likes + 1 } : p
+                        )
+                      }));
+                    }}
+                    className="text-[11px] text-gray-500 dark:text-stone-400 hover:text-primary dark:hover:text-amber-300 flex items-center gap-1 bg-cream dark:bg-stone-900 px-2.5 py-1 rounded-lg border dark:border-stone-700"
+                  >
+                    <ThumbsUp size={12} /> {post.likes} Amen
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* New Post Input */}
@@ -788,7 +1034,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
         </div>
 
         {/* Active Memberships Summary Box */}
-        <div className="bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs space-y-2">
+        <div className="bg-white dark:bg-card-warm p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs space-y-2">
           <h3 className="font-serif font-bold text-xs uppercase tracking-wide text-primary dark:text-warm-amber">Active Memberships</h3>
           <div className="text-xs text-gray-700 dark:text-stone-300 space-y-1">
             <div><strong>Bible Study:</strong> {user.bibleBook || 'General Fellowship'} Group</div>
@@ -798,7 +1044,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
         </div>
 
         {/* Dark Mode Switch Toggle Row */}
-        <div className="bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs flex justify-between items-center">
+        <div className="bg-white dark:bg-card-warm p-4 rounded-xl border border-gray-100 dark:border-stone-700/80 shadow-xs flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-full bg-primary/5 dark:bg-stone-950/60 text-primary dark:text-warm-amber">
               {isDarkMode ? <Moon size={22} /> : <Sun size={22} />}
@@ -863,7 +1109,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     };
 
     const PrayerCard = ({ prayer }: { prayer: PrayerEntry }) => (
-      <div className={`bg-white dark:bg-stone-900 p-4 rounded-xl border shadow-xs space-y-3 ${
+      <div className={`bg-white dark:bg-card-warm p-4 rounded-xl border shadow-xs space-y-3 ${
         prayer.answered
           ? 'border-primary/40 dark:border-stone-700/60 bg-primary/5 dark:bg-stone-950/30'
           : 'border-gray-100 dark:border-stone-700/80'
@@ -937,7 +1183,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">My Prayers</h2>
 
         {activePrayers.length === 0 && archivedPrayers.length === 0 ? (
-          <div className="bg-white dark:bg-stone-900 p-8 rounded-xl border border-gray-100 dark:border-stone-700/80 text-center space-y-3">
+          <div className="bg-white dark:bg-card-warm p-8 rounded-xl border border-gray-100 dark:border-stone-700/80 text-center space-y-3">
             <Heart size={32} className="text-gray-300 dark:text-stone-600 mx-auto" />
             <p className="text-sm text-gray-600 dark:text-stone-400 leading-relaxed">
               You haven't submitted any prayers yet. Share what's on your heart from the Home tab.
@@ -982,7 +1228,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
       </button>
       <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Notifications</h2>
 
-      <div className="bg-white dark:bg-stone-900 p-5 rounded-xl border border-gray-100 dark:border-stone-700 space-y-4 text-xs">
+      <div className="bg-white dark:bg-card-warm p-5 rounded-xl border border-gray-100 dark:border-stone-700 space-y-4 text-xs">
         <div className="flex justify-between items-center">
           <div>
             <h3 className="font-bold text-gray-800 dark:text-stone-100">Daily Reminders</h3>
@@ -990,7 +1236,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
           </div>
           <div className="flex items-center rounded-full bg-gray-100 dark:bg-stone-800 p-1">
             <button
-              onClick={() => updateProfile('notificationsEnabled', false)}
+              onClick={() => {
+                updateProfile('notificationsEnabled', false);
+                persistUserEdits({ notificationsEnabled: false });
+              }}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
                 !user.notificationsEnabled
                   ? 'bg-white text-primary shadow-sm'
@@ -1000,7 +1249,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
               Off
             </button>
             <button
-              onClick={() => updateProfile('notificationsEnabled', true)}
+              onClick={() => {
+                updateProfile('notificationsEnabled', true);
+                persistUserEdits({ notificationsEnabled: true });
+              }}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
                 user.notificationsEnabled
                   ? 'bg-stone-900 dark:bg-warm-amber text-white shadow-sm'
@@ -1039,7 +1291,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
                   Back to Profile
                 </button>
                 <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Account Privacy Settings</h2>
-                <div className="bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700 text-xs space-y-3">
+                <div className="bg-white dark:bg-card-warm p-4 rounded-xl border border-gray-100 dark:border-stone-700 text-xs space-y-3">
                   <p className="text-gray-600 dark:text-stone-300">Your account data is private and encrypted. Group discussions are protected by moderation tools.</p>
                 </div>
               </div>
@@ -1053,7 +1305,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
                   Back to Profile
                 </button>
                 <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Help & Support</h2>
-                <div className="bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700 text-xs space-y-2">
+                <div className="bg-white dark:bg-card-warm p-4 rounded-xl border border-gray-100 dark:border-stone-700 text-xs space-y-2">
                   <p className="font-bold text-primary dark:text-warm-amber">How do group capacities work?</p>
                   <p className="text-gray-600 dark:text-stone-300">Each small group is capped at 12 members. If full, you can choose 'Join Late' or 'Wait for Next Group'.</p>
                 </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { UserProfile, StruggleType } from '../types';
 import { STRUGGLES, POPULAR_BOOKS, OLD_TESTAMENT_BOOKS, NEW_TESTAMENT_BOOKS } from '../constants';
 import { Button } from './Button';
-import { Check, Mail, Lock, Info, Sparkles, BookOpen, Compass, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Check, Mail, Lock, Info, Sparkles, BookOpen, Compass, ArrowRight, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 
 interface OnboardingProps {
   onComplete: (profile: UserProfile) => void;
@@ -55,6 +55,36 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     wantsGroupMatch: true
   });
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [signupError, setSignupError] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validateEmail = (email: string): boolean => {
+    return EMAIL_REGEX.test(email);
+  };
+
+  const getUserKey = (email: string) => `user_${email.toLowerCase()}`;
+  const accountExists = (email: string) => {
+    try {
+      return localStorage.getItem(getUserKey(email)) !== null;
+    } catch {
+      return false;
+    }
+  };
+  const loadUserData = (email: string): { profile: UserProfile } | null => {
+    try {
+      const raw = localStorage.getItem(getUserKey(email));
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  };
 
   // Smooth loading scale-and-fade animation trigger on mount
   useEffect(() => {
@@ -156,45 +186,135 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         )}
 
         <div>
-          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Email</label>
+          <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">Email</label>
           <div className="relative">
             <Mail className="absolute left-4 top-4 text-gray-400" size={20} />
             <input
               type="email"
               value={data.email}
-              onChange={(e) => updateData('email', e.target.value)}
+              onChange={(e) => {
+                updateData('email', e.target.value);
+                setSignupError('');
+                setLoginError('');
+                if (e.target.value && !validateEmail(e.target.value)) {
+                  setEmailError('Please enter a valid email address');
+                } else {
+                  setEmailError('');
+                }
+              }}
               placeholder="you@example.com"
-              className="w-full p-4 pl-12 rounded-xl border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white text-sm"
+              className="w-full p-4 pl-12 rounded-xl border border-gray-200 dark:border-stone-700 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white dark:bg-stone-900 text-sm text-gray-800 dark:text-stone-100"
             />
           </div>
+          {emailError && (
+            <p className="text-xs text-red-500 mt-1 ml-1">{emailError}</p>
+          )}
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Password</label>
+          <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">Password</label>
           <div className="relative">
             <Lock className="absolute left-4 top-4 text-gray-400" size={20} />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full p-4 pl-12 rounded-xl border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white text-sm"
+              className="w-full p-4 pl-12 pr-12 rounded-xl border border-gray-200 dark:border-stone-700 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white dark:bg-stone-900 text-sm text-gray-800 dark:text-stone-100"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
         </div>
+
+        {!isSignInMode && (
+          <div>
+            <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">Confirm Password</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-4 text-gray-400" size={20} />
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (e.target.value !== password) {
+                    setPasswordError('Passwords do not match');
+                  } else {
+                    setPasswordError('');
+                  }
+                }}
+                placeholder="••••••••"
+                className="w-full p-4 pl-12 pr-12 rounded-xl border border-gray-200 dark:border-stone-700 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white dark:bg-stone-900 text-sm text-gray-800 dark:text-stone-100"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              >
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            {passwordError && (
+              <p className="text-xs text-red-500 mt-1 ml-1">{passwordError}</p>
+            )}
+          </div>
+        )}
       </div>
 
       <Button 
-        disabled={isSignInMode ? (!data.email || !password) : (!data.name || !data.email || !password)} 
-        onClick={() => setStep(prev => prev + 1)}
+        disabled={
+          isSignInMode
+            ? (!data.email || !password || !validateEmail(data.email))
+            : (!data.name || !data.email || !password || !confirmPassword || !validateEmail(data.email) || password !== confirmPassword)
+        } 
+        onClick={() => {
+          if (!data.email) return;
+          if (isSignInMode) {
+            // Login mode: check if account exists
+            const userData = loadUserData(data.email);
+            if (!userData) {
+              setLoginError('No account found with this email. Please sign up instead.');
+              return;
+            }
+            // Account exists — load their saved profile and complete onboarding
+            onComplete({ ...userData.profile, email: data.email });
+          } else {
+            // Sign-up mode: check if account already exists
+            if (accountExists(data.email)) {
+              setSignupError('An account with this email already exists. Please log in instead.');
+              return;
+            }
+            // New account — proceed with onboarding
+            setStep(prev => prev + 1);
+          }
+        }}
       >
         {isSignInMode ? 'Log In' : 'Continue'}
       </Button>
 
+      {signupError && (
+        <p className="text-xs text-red-500 mt-2 text-center">{signupError}</p>
+      )}
+      {loginError && (
+        <p className="text-xs text-red-500 mt-2 text-center">{loginError}</p>
+      )}
+
       <div className="text-center pt-2">
         <button
           type="button"
-          onClick={() => setIsSignInMode(!isSignInMode)}
+          onClick={() => {
+            setIsSignInMode(!isSignInMode);
+            setConfirmPassword('');
+            setEmailError('');
+            setPasswordError('');
+            setSignupError('');
+            setLoginError('');
+          }}
           className="text-xs text-primary font-bold hover:underline py-2"
         >
           {isSignInMode ? "Don't have an account? Sign Up" : 'Already have an account? Log In'}

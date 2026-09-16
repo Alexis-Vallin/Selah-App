@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react';
 import { UserProfile } from '../types';
+import { BIBLE_BOOKS, OLD_TESTAMENT_BOOKS, NEW_TESTAMENT_BOOKS } from '../constants';
 
 interface BibleStudyGroup {
   id: string;
@@ -31,128 +32,86 @@ interface BibleStudyGroup {
   isOnline: boolean;
   location?: string;
   zip?: string;
+  testament: 'Old Testament' | 'New Testament';
 }
 
-const SEED_GROUPS: BibleStudyGroup[] = [
-  {
-    id: 'psalms-songs-night',
-    displayName: 'Psalms: Songs in the Night',
-    book: 'Psalms',
-    topic: 'Comfort and praise through the Psalms',
-    capacity: 15,
-    activeMemberCount: 7,
-    moderatorName: 'Maya T.',
-    meetingTime: 'Sundays, 9:00 AM',
-    status: 'open',
-    isOnline: false,
-    location: 'Austin, TX',
-    zip: '78701',
-  },
-  {
-    id: 'romans-grace-anchors',
-    displayName: 'Romans: Grace and Anchors',
-    book: 'Romans',
-    topic: "Walking through Paul's letter together",
-    capacity: 15,
-    activeMemberCount: 12,
-    moderatorName: 'Sarah L.',
-    meetingTime: 'Thursdays, 6:00 PM',
-    status: 'open',
-    isOnline: false,
-    location: 'Portland, OR',
-    zip: '97204',
-  },
-  {
-    id: 'john-light-darkness',
-    displayName: 'John: Light in the Darkness',
-    book: 'John',
-    topic: 'The signs and "I am" sayings of Jesus',
-    capacity: 15,
-    activeMemberCount: 9,
-    moderatorName: 'Jordan K.',
-    meetingTime: 'Mondays, 8:00 PM',
-    status: 'live',
-    isOnline: false,
-    location: 'Atlanta, GA',
-    zip: '30303',
-  },
-  {
-    id: 'joshua-courage-unknown',
-    displayName: 'Joshua: Courage in the Unknown',
-    book: 'Joshua',
-    topic: 'Stepping forward when the path is unclear',
-    capacity: 15,
-    activeMemberCount: 6,
-    moderatorName: 'Daniel R.',
-    meetingTime: 'Tuesdays, 7:00 PM',
-    status: 'open',
-    isOnline: false,
-    location: 'Phoenix, AZ',
-    zip: '85001',
-  },
-  {
-    id: 'genesis-beginning-belonging',
-    displayName: 'Genesis: In the Beginning, Belonging',
-    book: 'Genesis',
-    topic: 'Finding identity in the first book of the Bible',
-    capacity: 15,
-    activeMemberCount: 4,
-    moderatorName: 'Esther M.',
-    meetingTime: 'Saturdays, 10:00 AM',
-    status: 'open',
-    isOnline: false,
-    location: 'Denver, CO',
-    zip: '80202',
-  },
-  {
-    id: 'proverbs-wisdom-restless',
-    displayName: 'Proverbs: Wisdom for the Restless',
-    book: 'Proverbs',
-    topic: 'Applying Proverbs to everyday decisions',
-    capacity: 15,
-    activeMemberCount: 15,
-    moderatorName: 'Chris B.',
-    meetingTime: 'Wednesdays, 7:30 PM',
-    status: 'full',
-    isOnline: true,
-  },
-  {
-    id: 'ephesians-rooted-grounded',
-    displayName: 'Ephesians: Rooted and Grounded',
-    book: 'Ephesians',
-    topic: 'Discovering who we are in Christ together',
-    capacity: 15,
-    activeMemberCount: 10,
-    moderatorName: 'Rachel H.',
-    meetingTime: 'Fridays, 12:00 PM',
-    status: 'open',
-    isOnline: true,
-  },
-  {
-    id: 'ruth-loyalty-harvest',
-    displayName: 'Ruth: Loyalty in the Harvest',
-    book: 'Ruth',
-    topic: 'Faithfulness, loss, and unexpected belonging',
-    capacity: 15,
-    activeMemberCount: 8,
-    moderatorName: 'Naomi G.',
-    meetingTime: 'Sundays, 6:00 PM',
-    status: 'open',
-    isOnline: true,
-  },
-  {
-    id: 'philippians-joy-odds',
-    displayName: 'Philippians: Joy Against the Odds',
-    book: 'Philippians',
-    topic: 'Choosing joy in every season',
-    capacity: 15,
-    activeMemberCount: 14,
-    moderatorName: 'Pauline S.',
-    meetingTime: 'Thursdays, 8:00 PM',
-    status: 'open',
-    isOnline: true,
-  },
+const MODERATORS = [
+  'Maya T.', 'Sarah L.', 'Jordan K.', 'Daniel R.', 'Esther M.',
+  'Chris B.', 'Rachel H.', 'Naomi G.', 'Pauline S.', 'David K.',
+  'Grace M.', 'Thomas W.', 'Ruth A.', 'Michael K.', 'Esther L.',
+  'Paul M.', 'Martha J.', 'Samuel O.', 'Rebekah P.', 'Andrew J.',
+  'Anna S.', 'Joel B.', 'Hannah K.', 'Luke W.', 'Miriam N.',
+  'Stephen D.', 'Deborah A.', 'Timothy R.', 'Lydia F.', 'Gideon M.',
 ];
+
+const MEETING_TIMES = [
+  'Sundays, 9:00 AM', 'Sundays, 6:00 PM', 'Mondays, 8:00 PM',
+  'Tuesdays, 7:00 PM', 'Wednesdays, 7:30 PM', 'Thursdays, 6:00 PM',
+  'Thursdays, 8:00 PM', 'Fridays, 12:00 PM', 'Fridays, 7:00 PM',
+  'Saturdays, 10:00 AM',
+];
+
+const LOCATIONS = [
+  'Austin, TX', 'Portland, OR', 'Atlanta, GA', 'Phoenix, AZ', 'Denver, CO',
+  'London, UK', 'Manchester, UK', 'Nashville, TN', 'Seattle, WA', 'Chicago, IL',
+  'Dallas, TX', 'Miami, FL', 'Boston, MA', 'San Diego, CA', 'Minneapolis, MN',
+  'Toronto, ON',
+];
+
+const TOPIC_TEMPLATES = [
+  "Discovering God's heart in {book}",
+  'Finding hope and wisdom in {book}',
+  'Walking through {book} together',
+  'Deep dive into {book}',
+  'Life lessons from {book}',
+  'Growing in faith through {book}',
+];
+
+const DISPLAY_SUFFIXES = ['Journey', 'Reflections', 'Foundations', 'Encounters', 'Awakening', 'Anchored'];
+
+const generateGroups = (): BibleStudyGroup[] => {
+  const groups: BibleStudyGroup[] = [];
+  const popularExtras: Record<string, number> = {
+    Psalms: 2, John: 2, Romans: 2, Genesis: 2, Proverbs: 2,
+  };
+
+  BIBLE_BOOKS.forEach((book, index) => {
+    const isOld = OLD_TESTAMENT_BOOKS.includes(book);
+    const count = 1 + (popularExtras[book] || 0);
+    for (let i = 0; i < count; i++) {
+      const mod = MODERATORS[(index * 3 + i) % MODERATORS.length];
+      const time = MEETING_TIMES[(index + i) % MEETING_TIMES.length];
+      const members = 3 + ((index * 7 + i * 13) % 12);
+      const isOnline = ((index + i) % 5) >= 3;
+      const location = isOnline ? undefined : LOCATIONS[(index + i) % LOCATIONS.length];
+      const zip = isOnline ? undefined : String(10000 + ((index * 137 + i * 53) % 89999));
+      const topic = TOPIC_TEMPLATES[index % TOPIC_TEMPLATES.length].replace('{book}', book);
+      const status: BibleStudyGroup['status'] =
+        members >= 15 ? 'full' : (i === 0 && index % 8 === 0 ? 'live' : 'open');
+      const suffix = DISPLAY_SUFFIXES[(index + i) % DISPLAY_SUFFIXES.length];
+
+      groups.push({
+        id: `study-${book.toLowerCase().replace(/[^a-z0-9]/g, '-')}${i > 0 ? `-${i + 1}` : ''}`,
+        displayName: `${book}: ${suffix}`,
+        book,
+        topic,
+        capacity: 15,
+        activeMemberCount: members,
+        moderatorName: mod,
+        meetingTime: time,
+        status,
+        isOnline,
+        location,
+        zip,
+        testament: isOld ? 'Old Testament' : 'New Testament',
+      });
+    }
+  });
+
+  return groups;
+};
+
+const SEED_GROUPS = generateGroups();
 
 interface BibleStudyProps {
   user: UserProfile;
@@ -160,33 +119,34 @@ interface BibleStudyProps {
 
 const MAX_GROUPS = 2;
 
-const JOINED_GROUPS_STORAGE_KEY = 'selah_joined_groups';
-
-const readStoredJoinedIds = (): string[] => {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = window.localStorage.getItem(JOINED_GROUPS_STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return Array.from(new Set(parsed.filter((x): x is string => typeof x === 'string')))
-      .filter((id) => SEED_GROUPS.some((g) => g.id === id))
-      .slice(0, MAX_GROUPS);
-  } catch {
-    return [];
-  }
-};
-
-const CHAPTER_BY_BOOK: Record<string, string> = {
-  Psalms: 'Psalms 23',
-  Romans: 'Romans 8',
-  John: 'John 8',
-  Joshua: 'Joshua 1',
-  Genesis: 'Genesis 1',
-  Proverbs: 'Proverbs 3',
-  Ephesians: 'Ephesians 3',
-  Ruth: 'Ruth 1',
-  Philippians: 'Philippians 4',
+const getChapterForBook = (book: string): string => {
+  const knownChapters: Record<string, string> = {
+    Genesis: 'Genesis 1', Exodus: 'Exodus 14', Leviticus: 'Leviticus 19',
+    Numbers: 'Numbers 6', Deuteronomy: 'Deuteronomy 6', Joshua: 'Joshua 1',
+    Judges: 'Judges 6', Ruth: 'Ruth 1', '1 Samuel': '1 Samuel 16',
+    '2 Samuel': '2 Samuel 7', '1 Kings': '1 Kings 3', '2 Kings': '2 Kings 2',
+    '1 Chronicles': '1 Chronicles 16', '2 Chronicles': '2 Chronicles 7',
+    Ezra: 'Ezra 7', Nehemiah: 'Nehemiah 8', Esther: 'Esther 4',
+    Job: 'Job 38', Psalms: 'Psalms 23', Proverbs: 'Proverbs 3',
+    Ecclesiastes: 'Ecclesiastes 3', 'Song of Solomon': 'Song of Solomon 1',
+    Isaiah: 'Isaiah 40', Jeremiah: 'Jeremiah 29', Lamentations: 'Lamentations 3',
+    Ezekiel: 'Ezekiel 37', Daniel: 'Daniel 3', Hosea: 'Hosea 6',
+    Joel: 'Joel 2', Amos: 'Amos 5', Obadiah: 'Obadiah 1', Jonah: 'Jonah 1',
+    Micah: 'Micah 6', Nahum: 'Nahum 1', Habakkuk: 'Habakkuk 3',
+    Zephaniah: 'Zephaniah 3', Haggai: 'Haggai 2', Zechariah: 'Zechariah 4',
+    Malachi: 'Malachi 3',
+    Matthew: 'Matthew 5', Mark: 'Mark 4', Luke: 'Luke 15', John: 'John 8',
+    Acts: 'Acts 2', Romans: 'Romans 8', '1 Corinthians': '1 Corinthians 13',
+    '2 Corinthians': '2 Corinthians 5', Galatians: 'Galatians 5',
+    Ephesians: 'Ephesians 3', Philippians: 'Philippians 4', Colossians: 'Colossians 3',
+    '1 Thessalonians': '1 Thessalonians 5', '2 Thessalonians': '2 Thessalonians 3',
+    '1 Timothy': '1 Timothy 6', '2 Timothy': '2 Timothy 4', Titus: 'Titus 2',
+    Philemon: 'Philemon 1', Hebrews: 'Hebrews 11', James: 'James 1',
+    '1 Peter': '1 Peter 5', '2 Peter': '2 Peter 3', '1 John': '1 John 4',
+    '2 John': '2 John 1', '3 John': '3 John 1', Jude: 'Jude 1',
+    Revelation: 'Revelation 21',
+  };
+  return knownChapters[book] || `${book} 1`;
 };
 
 const getFirstName = (name: string) => {
@@ -364,7 +324,7 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
     setInvited(false);
   }, [group.id]);
 
-  const currentChapter = CHAPTER_BY_BOOK[group.book] || `${group.book} 1`;
+  const currentChapter = getChapterForBook(group.book);
   const modFirstName = getFirstName(group.moderatorName);
 
   const handleInvite = () => {
@@ -648,16 +608,26 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
 
 export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
   const [browseOpen, setBrowseOpen] = useState(false);
-  const [browseTab, setBrowseTab] = useState<'local' | 'online'>('local');
-  const [localSearch, setLocalSearch] = useState(user.location ?? '');
-  const [onlineSearch, setOnlineSearch] = useState('');
+  const [browseSearch, setBrowseSearch] = useState('');
+  const [filters, setFilters] = useState({
+    local: true,
+    online: true,
+    oldTestament: true,
+    newTestament: true,
+  });
   const [joinedIds, setJoinedIds] = useState<string[]>(() => {
-    const stored = readStoredJoinedIds();
-    return Array.from(
-      new Set([user.bibleStudyGroupId, ...stored].filter(Boolean) as string[])
-    )
-      .filter((id) => SEED_GROUPS.some((g) => g.id === id))
-      .slice(0, MAX_GROUPS);
+    try {
+      if (!user.email) return [];
+      const raw = localStorage.getItem(`user_${user.email.toLowerCase()}`);
+      if (!raw) return [];
+      const blob = JSON.parse(raw);
+      const stored: string[] = blob.joinedStudyGroups || [];
+      return Array.from(new Set(stored))
+        .filter((id) => SEED_GROUPS.some((g) => g.id === id))
+        .slice(0, MAX_GROUPS);
+    } catch {
+      return [];
+    }
   });
   const [swapCandidateId, setSwapCandidateId] = useState<string | null>(null);
   const [openedGroupId, setOpenedGroupId] = useState<string | null>(null);
@@ -675,16 +645,17 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
   const atGroupLimit = joinedIds.length >= MAX_GROUPS;
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !user.email) return;
     try {
-      window.localStorage.setItem(
-        JOINED_GROUPS_STORAGE_KEY,
-        JSON.stringify(joinedIds)
-      );
+      const key = `user_${user.email.toLowerCase()}`;
+      const raw = localStorage.getItem(key);
+      const blob = raw ? JSON.parse(raw) : {};
+      blob.joinedStudyGroups = joinedIds;
+      localStorage.setItem(key, JSON.stringify(blob));
     } catch {
-      /* ignore write errors (e.g. storage disabled) */
+      /* ignore write errors */
     }
-  }, [joinedIds]);
+  }, [joinedIds, user.email]);
 
   useEffect(() => {
     setDrawerOpen(false);
@@ -995,13 +966,24 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
 
   const Scenario3 = () => {
     const book = user.bibleBook || '';
+    const userLocation = (user.location || '').toLowerCase();
     const matches = SEED_GROUPS.filter(
       (g) => g.book.toLowerCase() === book.toLowerCase()
     );
-    const fallback = matches.length === 0;
-    const renderedGroups = fallback
-      ? SEED_GROUPS.filter((g) => g.status !== 'full').slice(0, 3)
-      : matches;
+    const localMatches = matches.filter(
+      (g) => !g.isOnline && g.location?.toLowerCase().includes(userLocation)
+    );
+    const onlineMatches = matches.filter((g) => g.isOnline);
+    const hasLocalNearUser = localMatches.length > 0;
+
+    const renderedGroups = hasLocalNearUser
+      ? localMatches
+      : onlineMatches.length > 0
+        ? onlineMatches
+        : SEED_GROUPS.filter((g) => g.status !== 'full').slice(0, 3);
+
+    const showFallback = !hasLocalNearUser && matches.length > 0;
+    const noBookMatch = matches.length === 0;
 
     return (
       <main className="px-6 py-8">
@@ -1020,9 +1002,14 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
           <p className="text-sm text-gray-500 dark:text-stone-300 mb-6">
             Pick a circle to start growing together.
           </p>
-          {fallback && (
-            <div className="mb-6 rounded-xl bg-stone-800 dark:bg-stone-800 px-4 py-3 text-xs text-gray-600 dark:text-stone-300">
-              We don't have a {book} circle open right now, but these groups are starting soon.
+          {showFallback && (
+            <div className="mb-6 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 px-4 py-3 text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
+              No local study found for <strong>{book}</strong> near <strong>{user.location || 'your location'}</strong> at the moment. Check out the Online option below, or use the search/'+' button to explore other books!
+            </div>
+          )}
+          {noBookMatch && (
+            <div className="mb-6 rounded-xl bg-stone-100 dark:bg-stone-800 px-4 py-3 text-xs text-gray-600 dark:text-stone-300 leading-relaxed">
+              We don't have a {book} circle open right now, but these groups are starting soon. Use the search/'+' button to explore other books!
             </div>
           )}
           <div className="space-y-4">
@@ -1037,24 +1024,37 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
 
   const Browse = () => {
     const filteredGroups = useMemo(() => {
-      const byTab = SEED_GROUPS.filter((g) =>
-        browseTab === 'local' ? !g.isOnline : g.isOnline
-      );
-      const query = (browseTab === 'local' ? localSearch : onlineSearch).trim().toLowerCase();
-      if (!query) return byTab;
-      if (browseTab === 'local') {
-        return byTab.filter((g) =>
-          [g.location, g.zip].filter(Boolean).some((field) =>
-            field!.toLowerCase().includes(query)
-          )
+      let result = SEED_GROUPS;
+
+      // Apply toggle filters
+      if (!filters.local || !filters.online) {
+        result = result.filter(g => {
+          if (g.isOnline && !filters.online) return false;
+          if (!g.isOnline && !filters.local) return false;
+          return true;
+        });
+      }
+      if (!filters.oldTestament || !filters.newTestament) {
+        result = result.filter(g => {
+          if (g.testament === 'Old Testament' && !filters.oldTestament) return false;
+          if (g.testament === 'New Testament' && !filters.newTestament) return false;
+          return true;
+        });
+      }
+
+      // Apply search query
+      const query = browseSearch.trim().toLowerCase();
+      if (query) {
+        result = result.filter(g =>
+          g.book.toLowerCase().includes(query) ||
+          g.moderatorName.toLowerCase().includes(query) ||
+          g.topic.toLowerCase().includes(query) ||
+          g.displayName.toLowerCase().includes(query)
         );
       }
-      return byTab.filter((g) =>
-        [g.topic, g.meetingTime].some((field) =>
-          field.toLowerCase().includes(query)
-        )
-      );
-    }, [browseTab, localSearch, onlineSearch]);
+
+      return result;
+    }, [browseSearch, filters]);
 
     return (
       <main className="px-6 py-8">
@@ -1078,51 +1078,56 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
             Choose a circle to begin your journey.
           </p>
 
-          <div className="rounded-full bg-stone-100 dark:bg-card-warm p-1 flex mb-6">
-            {(['local', 'online'] as const).map((tab) => (
+          {/* Search Bar */}
+          <div className="relative mb-4">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <input
+              type="text"
+              value={browseSearch}
+              onChange={(e) => setBrowseSearch(e.target.value)}
+              placeholder="Search by book, leader, or topic..."
+              className="w-full bg-white dark:bg-card-warm text-sm text-gray-900 dark:text-stone-100 placeholder-stone-400 rounded-full pl-11 pr-5 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition border border-gray-200 dark:border-stone-700"
+            />
+          </div>
+
+          {/* 4 Filter Chips */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {([
+              { key: 'local', label: 'Local' },
+              { key: 'online', label: 'Online' },
+              { key: 'oldTestament', label: 'Old Testament' },
+              { key: 'newTestament', label: 'New Testament' },
+            ] as const).map(chip => (
               <button
-                key={tab}
-                onClick={() => setBrowseTab(tab)}
-                className={`flex-1 px-4 py-2 rounded-full text-sm font-semibold transition ${
-                  browseTab === tab
-                    ? 'bg-primary text-white'
-                    : 'text-gray-600 dark:text-stone-300 hover:text-primary'
+                key={chip.key}
+                onClick={() => setFilters(prev => ({ ...prev, [chip.key]: !prev[chip.key] }))}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
+                  filters[chip.key]
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'bg-stone-100 dark:bg-stone-800 text-gray-500 dark:text-stone-400 border border-gray-200 dark:border-stone-700'
                 }`}
               >
-                {tab === 'local' ? 'Local Circles' : 'Online Circles'}
+                {chip.label}
               </button>
             ))}
           </div>
 
-          <div className="relative mb-6">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-            <input
-              type="text"
-              value={browseTab === 'local' ? localSearch : onlineSearch}
-              onChange={(e) =>
-                browseTab === 'local'
-                  ? setLocalSearch(e.target.value)
-                  : setOnlineSearch(e.target.value)
-              }
-              placeholder={
-                browseTab === 'local'
-                  ? 'Search by City, State, or Zip Code'
-                  : 'Search by Topic or Meeting Time'
-              }
-              className="w-full bg-card-warm dark:bg-card-warm text-sm text-white placeholder-stone-400 rounded-full pl-11 pr-5 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition"
-            />
-          </div>
+          {/* Results count */}
+          <p className="text-xs text-gray-500 dark:text-stone-400 mb-4">
+            {filteredGroups.length} {filteredGroups.length === 1 ? 'circle' : 'circles'} found
+          </p>
 
+          {/* Results */}
           {filteredGroups.length === 0 ? (
             <div className="flex flex-col items-center text-center py-16">
               <div className="w-16 h-16 rounded-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-warm-amber flex items-center justify-center mb-4">
                 <Search className="w-7 h-7" />
               </div>
               <h3 className="font-serif text-xl font-bold text-gray-900 dark:text-amber-100">
-                No circles found matching your search
+                No circles found
               </h3>
               <p className="text-sm text-gray-500 dark:text-stone-300 mt-2 max-w-xs">
-                Try adjusting your search or switch tabs to find more circles.
+                No study groups match your filters at the moment. Try adjusting your search or toggling different filters.
               </p>
             </div>
           ) : (

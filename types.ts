@@ -86,6 +86,7 @@ export interface CommunityPost {
   content: string;
   timestamp: number;
   likes: number;
+  verseTag?: string;
 }
 
 export type PostType = 'DEVOTIONAL' | 'PRAYER_REQUEST' | 'ENCOURAGEMENT' | 'QUESTION';
