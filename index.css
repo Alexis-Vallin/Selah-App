@@ -12,6 +12,7 @@
     --color-background-dark: var(--background-dark);
     --color-foreground: var(--foreground);
     --color-card: var(--card);
+    --color-card-warm: var(--card-warm);
     --color-card-foreground: var(--card-foreground);
     --color-popover: var(--popover);
     --color-popover-foreground: var(--popover-foreground);
@@ -103,6 +104,7 @@
     --background-dark: #1C1614;
     --foreground: #F5F0EB;
     --card: #29231F;
+    --card-warm: #251D1A;
     --card-foreground: #F5F0EB;
     --popover: #29231F;
     --popover-foreground: #F5F0EB;

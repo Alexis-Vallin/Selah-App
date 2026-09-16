@@ -8,6 +8,7 @@ import {
   Link,
   LogOut,
   Plus,
+  Search,
   Send,
   User,
   UserPlus,
@@ -27,6 +28,9 @@ interface BibleStudyGroup {
   moderatorName: string;
   meetingTime: string;
   status: 'open' | 'full' | 'live';
+  isOnline: boolean;
+  location?: string;
+  zip?: string;
 }
 
 const SEED_GROUPS: BibleStudyGroup[] = [
@@ -40,6 +44,9 @@ const SEED_GROUPS: BibleStudyGroup[] = [
     moderatorName: 'Maya T.',
     meetingTime: 'Sundays, 9:00 AM',
     status: 'open',
+    isOnline: false,
+    location: 'Austin, TX',
+    zip: '78701',
   },
   {
     id: 'romans-grace-anchors',
@@ -51,6 +58,9 @@ const SEED_GROUPS: BibleStudyGroup[] = [
     moderatorName: 'Sarah L.',
     meetingTime: 'Thursdays, 6:00 PM',
     status: 'open',
+    isOnline: false,
+    location: 'Portland, OR',
+    zip: '97204',
   },
   {
     id: 'john-light-darkness',
@@ -62,6 +72,9 @@ const SEED_GROUPS: BibleStudyGroup[] = [
     moderatorName: 'Jordan K.',
     meetingTime: 'Mondays, 8:00 PM',
     status: 'live',
+    isOnline: false,
+    location: 'Atlanta, GA',
+    zip: '30303',
   },
   {
     id: 'joshua-courage-unknown',
@@ -73,6 +86,9 @@ const SEED_GROUPS: BibleStudyGroup[] = [
     moderatorName: 'Daniel R.',
     meetingTime: 'Tuesdays, 7:00 PM',
     status: 'open',
+    isOnline: false,
+    location: 'Phoenix, AZ',
+    zip: '85001',
   },
   {
     id: 'genesis-beginning-belonging',
@@ -84,6 +100,9 @@ const SEED_GROUPS: BibleStudyGroup[] = [
     moderatorName: 'Esther M.',
     meetingTime: 'Saturdays, 10:00 AM',
     status: 'open',
+    isOnline: false,
+    location: 'Denver, CO',
+    zip: '80202',
   },
   {
     id: 'proverbs-wisdom-restless',
@@ -95,6 +114,7 @@ const SEED_GROUPS: BibleStudyGroup[] = [
     moderatorName: 'Chris B.',
     meetingTime: 'Wednesdays, 7:30 PM',
     status: 'full',
+    isOnline: true,
   },
   {
     id: 'ephesians-rooted-grounded',
@@ -106,6 +126,7 @@ const SEED_GROUPS: BibleStudyGroup[] = [
     moderatorName: 'Rachel H.',
     meetingTime: 'Fridays, 12:00 PM',
     status: 'open',
+    isOnline: true,
   },
   {
     id: 'ruth-loyalty-harvest',
@@ -117,6 +138,7 @@ const SEED_GROUPS: BibleStudyGroup[] = [
     moderatorName: 'Naomi G.',
     meetingTime: 'Sundays, 6:00 PM',
     status: 'open',
+    isOnline: true,
   },
   {
     id: 'philippians-joy-odds',
@@ -128,6 +150,7 @@ const SEED_GROUPS: BibleStudyGroup[] = [
     moderatorName: 'Pauline S.',
     meetingTime: 'Thursdays, 8:00 PM',
     status: 'open',
+    isOnline: true,
   },
 ];
 
@@ -625,6 +648,9 @@ const GroupInterior: React.FC<GroupInteriorProps> = ({
 
 export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
   const [browseOpen, setBrowseOpen] = useState(false);
+  const [browseTab, setBrowseTab] = useState<'local' | 'online'>('local');
+  const [localSearch, setLocalSearch] = useState(user.location ?? '');
+  const [onlineSearch, setOnlineSearch] = useState('');
   const [joinedIds, setJoinedIds] = useState<string[]>(() => {
     const stored = readStoredJoinedIds();
     return Array.from(
@@ -798,7 +824,7 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
     const joined = joinedIds.includes(group.id);
     const full = group.activeMemberCount >= group.capacity;
     return (
-      <div className="bg-white dark:bg-stone-900 rounded-2xl p-5 shadow-sm border dark:border-stone-700 hover:shadow-md transition relative">
+      <div className="bg-white dark:bg-card-warm rounded-2xl p-5 shadow-sm border dark:border-stone-700 hover:shadow-md transition relative">
         <div className="absolute top-5 right-5">
           <StatusPill status={group.status} />
         </div>
@@ -1009,35 +1035,107 @@ export const BibleStudy: React.FC<BibleStudyProps> = ({ user }) => {
     );
   };
 
-  const Browse = () => (
-    <main className="px-6 py-8">
-      <div className="max-w-2xl mx-auto">
-        <button
-          onClick={() => setBrowseOpen(false)}
-          className="group flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary transition mb-6"
-        >
-          <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 group-hover:bg-primary/10 flex items-center justify-center transition">
-            <ArrowLeft className="w-4 h-4" />
-          </span>
-          Back
-        </button>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
-          All circles
-        </p>
-        <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100 mt-1">
-          Browse Bible study groups
-        </h2>
-        <p className="text-sm text-gray-500 dark:text-stone-300 mt-1 mb-6">
-          Choose a circle to begin your journey.
-        </p>
-        <div className="space-y-4">
-          {SEED_GROUPS.map((g) => (
-            <GroupCard key={g.id} group={g} />
-          ))}
+  const Browse = () => {
+    const filteredGroups = useMemo(() => {
+      const byTab = SEED_GROUPS.filter((g) =>
+        browseTab === 'local' ? !g.isOnline : g.isOnline
+      );
+      const query = (browseTab === 'local' ? localSearch : onlineSearch).trim().toLowerCase();
+      if (!query) return byTab;
+      if (browseTab === 'local') {
+        return byTab.filter((g) =>
+          [g.location, g.zip].filter(Boolean).some((field) =>
+            field!.toLowerCase().includes(query)
+          )
+        );
+      }
+      return byTab.filter((g) =>
+        [g.topic, g.meetingTime].some((field) =>
+          field.toLowerCase().includes(query)
+        )
+      );
+    }, [browseTab, localSearch, onlineSearch]);
+
+    return (
+      <main className="px-6 py-8">
+        <div className="max-w-2xl mx-auto">
+          <button
+            onClick={() => setBrowseOpen(false)}
+            className="group flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary transition mb-6"
+          >
+            <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 group-hover:bg-primary/10 flex items-center justify-center transition">
+              <ArrowLeft className="w-4 h-4" />
+            </span>
+            Back
+          </button>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70 dark:text-warm-amber">
+            All circles
+          </p>
+          <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-amber-100 mt-1">
+            Browse Bible study groups
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-stone-300 mt-1 mb-6">
+            Choose a circle to begin your journey.
+          </p>
+
+          <div className="rounded-full bg-stone-100 dark:bg-card-warm p-1 flex mb-6">
+            {(['local', 'online'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setBrowseTab(tab)}
+                className={`flex-1 px-4 py-2 rounded-full text-sm font-semibold transition ${
+                  browseTab === tab
+                    ? 'bg-primary text-white'
+                    : 'text-gray-600 dark:text-stone-300 hover:text-primary'
+                }`}
+              >
+                {tab === 'local' ? 'Local Circles' : 'Online Circles'}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative mb-6">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <input
+              type="text"
+              value={browseTab === 'local' ? localSearch : onlineSearch}
+              onChange={(e) =>
+                browseTab === 'local'
+                  ? setLocalSearch(e.target.value)
+                  : setOnlineSearch(e.target.value)
+              }
+              placeholder={
+                browseTab === 'local'
+                  ? 'Search by City, State, or Zip Code'
+                  : 'Search by Topic or Meeting Time'
+              }
+              className="w-full bg-card-warm dark:bg-card-warm text-sm text-white placeholder-stone-400 rounded-full pl-11 pr-5 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition"
+            />
+          </div>
+
+          {filteredGroups.length === 0 ? (
+            <div className="flex flex-col items-center text-center py-16">
+              <div className="w-16 h-16 rounded-full bg-primary/10 dark:bg-stone-800 text-primary dark:text-warm-amber flex items-center justify-center mb-4">
+                <Search className="w-7 h-7" />
+              </div>
+              <h3 className="font-serif text-xl font-bold text-gray-900 dark:text-amber-100">
+                No circles found matching your search
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-stone-300 mt-2 max-w-xs">
+                Try adjusting your search or switch tabs to find more circles.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredGroups.map((g) => (
+                <GroupCard key={g.id} group={g} />
+              ))}
+            </div>
+          )}
         </div>
-      </div>
-    </main>
-  );
+      </main>
+    );
+  };
 
   const renderContent = () => {
     if (openedGroupId) {

@@ -41,6 +41,251 @@ interface DashboardProps {
 type Tab = 'home' | 'discussions' | 'biblestudy' | 'profile';
 type ProfileView = 'menu' | 'edit-profile' | 'location' | 'struggles' | 'interests' | 'prayers' | 'notifications' | 'account' | 'help' | 'logout';
 
+interface SubViewProps {
+  user: UserProfile;
+  onBack: () => void;
+  updateProfile: (key: keyof UserProfile, value: any) => void;
+  persistUserEdits: (edits: Partial<UserProfile>) => void;
+}
+
+const EditProfileView: React.FC<SubViewProps> = ({ user, onBack, updateProfile, persistUserEdits }) => {
+  const [name, setName] = useState(user.name);
+  const [bio, setBio] = useState(user.bio || '');
+
+  const handleSave = () => {
+    updateProfile('name', name);
+    updateProfile('bio', bio);
+    persistUserEdits({ name });
+    onBack();
+  };
+
+  return (
+    <div className="space-y-6 pb-24 animate-fade-in">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
+        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
+          <ArrowLeft size={16} />
+        </span>
+        Back to Profile
+      </button>
+      <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Edit Profile</h2>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">Name</label>
+          <input value={name} onChange={e => setName(e.target.value)} className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary" />
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">About Me</label>
+          <textarea
+            value={bio}
+            onChange={e => setBio(e.target.value)}
+            maxLength={200}
+            placeholder="Share a little about your faith walk..."
+            className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary h-28 resize-none"
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-3 pt-2">
+        <Button variant="outline" onClick={onBack}>Cancel</Button>
+        <Button onClick={handleSave}>Save Changes</Button>
+      </div>
+    </div>
+  );
+};
+
+const LocationEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile, persistUserEdits }) => {
+  const [localLocation, setLocalLocation] = useState(user.location || '');
+
+  const handleSave = () => {
+    updateProfile('location', localLocation);
+    persistUserEdits({ location: localLocation });
+    onBack();
+  };
+
+  return (
+    <div className="space-y-6 pb-24 animate-fade-in">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
+        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
+          <ArrowLeft size={16} />
+        </span>
+        Back to Profile
+      </button>
+      <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Location</h2>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">City / Country</label>
+          <input
+            value={localLocation}
+            onChange={e => setLocalLocation(e.target.value)}
+            placeholder="e.g., London, UK"
+            className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
+          />
+        </div>
+        <p className="text-[11px] text-gray-500 dark:text-stone-400 leading-relaxed">This helps us connect you with local prayer groups and events.</p>
+      </div>
+
+      <div className="flex gap-3 pt-2">
+        <Button variant="outline" onClick={onBack}>Cancel</Button>
+        <Button onClick={handleSave}>Save Location</Button>
+      </div>
+    </div>
+  );
+};
+
+const StrugglesEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile, persistUserEdits }) => {
+  const [localStruggles, setLocalStruggles] = useState(user.struggles || []);
+
+  const toggle = (s: StruggleType) => {
+    if (localStruggles.includes(s)) setLocalStruggles(localStruggles.filter(i => i !== s));
+    else setLocalStruggles([...localStruggles, s]);
+  };
+
+  const handleSave = () => {
+    updateProfile('struggles', localStruggles);
+    persistUserEdits({ struggles: localStruggles });
+    onBack();
+  };
+
+  return (
+    <div className="space-y-6 pb-24 animate-fade-in">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
+        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
+          <ArrowLeft size={16} />
+        </span>
+        Back to Profile
+      </button>
+      <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Discussion Focus Areas</h2>
+
+      <div className="space-y-2">
+        {STRUGGLES.map((s) => {
+          const isSelected = localStruggles.includes(s);
+          return (
+            <button
+              key={s}
+              onClick={() => toggle(s)}
+              className={`w-full text-left p-3.5 rounded-xl transition-all border flex justify-between items-center text-xs ${isSelected
+                ? 'bg-primary dark:bg-stone-800 text-white border-primary shadow-xs font-bold'
+                : 'bg-white dark:bg-stone-900 border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200'
+                }`}
+            >
+              <span>{s}</span>
+              {isSelected && <Check size={16} />}
+            </button>
+          );
+        })}
+      </div>
+      <Button onClick={handleSave}>Save Focus Areas</Button>
+    </div>
+  );
+};
+
+const InterestsEditView: React.FC<SubViewProps> = ({ user, onBack, updateProfile, persistUserEdits }) => {
+  const [localInterests, setLocalInterests] = useState(user.biblicalInterests || []);
+  const [customInterest, setCustomInterest] = useState('');
+
+  const toggle = (interest: string) => {
+    if (localInterests.includes(interest)) setLocalInterests(localInterests.filter(i => i !== interest));
+    else setLocalInterests([...localInterests, interest]);
+  };
+
+  const addCustomInterest = () => {
+    const trimmed = customInterest.trim();
+    if (trimmed && !localInterests.includes(trimmed)) {
+      setLocalInterests([...localInterests, trimmed]);
+      setCustomInterest('');
+    }
+  };
+
+  const removeInterest = (interest: string) => {
+    setLocalInterests(localInterests.filter(i => i !== interest));
+  };
+
+  const options = [
+    'Apologetics',
+    'Prayer Life',
+    'Marriage & Family',
+    'Identity in Christ',
+    'Faith & Mental Health',
+    'Biblical Interpretation',
+    'Deep Theology',
+    'Daily Devotionals',
+    'Christian Leadership',
+    'Other'
+  ];
+
+  const customInterestsList = localInterests.filter(i => !options.includes(i));
+
+  const handleSave = () => {
+    updateProfile('biblicalInterests', localInterests);
+    persistUserEdits({ biblicalInterests: localInterests });
+    onBack();
+  };
+
+  return (
+    <div className="space-y-6 pb-24 animate-fade-in">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
+        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
+          <ArrowLeft size={16} />
+        </span>
+        Back to Profile
+      </button>
+      <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Biblical Interests</h2>
+
+      <div className="grid grid-cols-2 gap-2.5">
+        {options.map((opt) => {
+          const isSelected = localInterests.includes(opt);
+          return (
+            <button
+              key={opt}
+              onClick={() => toggle(opt)}
+              className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${isSelected
+                ? 'bg-primary dark:bg-stone-800 text-white border-primary shadow-xs'
+                : 'bg-white dark:bg-stone-900 border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200'
+                }`}
+            >
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Custom Interest Input */}
+      <div className="space-y-2 pt-2">
+        <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">Add Custom Interest</label>
+        <div className="flex gap-2">
+          <input
+            value={customInterest}
+            onChange={e => setCustomInterest(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') addCustomInterest(); }}
+            placeholder="e.g., Worship Music, Church History"
+            className="flex-1 p-3 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
+          />
+          <Button onClick={addCustomInterest}>Add</Button>
+        </div>
+      </div>
+
+      {/* Custom Interests as Removable Chips */}
+      {customInterestsList.length > 0 && (
+        <div className="flex flex-wrap gap-2 pt-2">
+          {customInterestsList.map(interest => (
+            <span key={interest} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 dark:bg-stone-950/60 text-primary dark:text-amber-300 rounded-full text-xs font-medium">
+              {interest}
+              <button onClick={() => removeInterest(interest)} className="hover:text-red-500 dark:hover:text-red-400 transition-colors">
+                <X size={12} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <Button onClick={handleSave}>Save Interests</Button>
+    </div>
+  );
+};
+
 export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [profileView, setProfileView] = useState<ProfileView>('menu');
@@ -108,15 +353,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     } catch { /* ignore */ }
   }, [isDarkMode]);
 
-  // Load Scripture
+  // Profile sub-view back navigation via browser history
   useEffect(() => {
-    let mounted = true;
-    generateScriptureOfTheDay(user.struggles || [])
-      .then(data => {
-        if (mounted) setScripture(data);
-      });
-    return () => { mounted = false; };
-  }, [user.struggles]);
+    if (profileView !== 'menu') {
+      window.history.pushState({ profileSubView: profileView }, '');
+      const handlePopState = () => {
+        setProfileView('menu');
+      };
+      window.addEventListener('popstate', handlePopState);
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, [profileView]);
 
 
 
@@ -599,220 +848,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
     );
   };
 
-  const renderEditProfile = () => {
-    const [name, setName] = useState(user.name);
-    const [bio, setBio] = useState(user.bio || '');
-
-    const handleSave = () => {
-      updateProfile('name', name);
-      updateProfile('bio', bio);
-      persistUserEdits({ name });
-      setProfileView('menu');
-    };
-
-    return (
-      <div className="space-y-6 pb-24 animate-fade-in">
-        <div className="flex items-center gap-2 mb-4">
-          <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800"><ArrowLeft size={20} className="text-gray-800 dark:text-stone-200" /></button>
-          <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Edit Profile</h2>
-        </div>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">Name</label>
-            <input value={name} onChange={e => setName(e.target.value)} className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary" />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">About Me</label>
-            <textarea
-              value={bio}
-              onChange={e => setBio(e.target.value)}
-              maxLength={200}
-              placeholder="Share a little about your faith walk..."
-              className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary h-28 resize-none"
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-3 pt-2">
-          <Button variant="outline" onClick={() => setProfileView('menu')}>Cancel</Button>
-          <Button onClick={handleSave}>Save Changes</Button>
-        </div>
-      </div>
-    );
-  };
-
-  const renderLocationEdit = () => {
-    const [localLocation, setLocalLocation] = useState(user.location || '');
-
-    const handleSave = () => {
-      updateProfile('location', localLocation);
-      persistUserEdits({ location: localLocation });
-      setProfileView('menu');
-    };
-
-    return (
-      <div className="space-y-6 pb-24 animate-fade-in">
-        <div className="flex items-center gap-2 mb-4">
-          <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800"><ArrowLeft size={20} className="text-gray-800 dark:text-stone-200" /></button>
-          <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Location</h2>
-        </div>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">City / Country</label>
-            <input
-              value={localLocation}
-              onChange={e => setLocalLocation(e.target.value)}
-              placeholder="e.g., London, UK"
-              className="w-full p-3.5 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
-            />
-          </div>
-          <p className="text-[11px] text-gray-500 dark:text-stone-400 leading-relaxed">This helps us connect you with local prayer groups and events.</p>
-        </div>
-
-        <div className="flex gap-3 pt-2">
-          <Button variant="outline" onClick={() => setProfileView('menu')}>Cancel</Button>
-          <Button onClick={handleSave}>Save Location</Button>
-        </div>
-      </div>
-    );
-  };
-
-  const renderStrugglesEdit = () => {
-    const [localStruggles, setLocalStruggles] = useState(user.struggles || []);
-
-    const toggle = (s: StruggleType) => {
-      if (localStruggles.includes(s)) setLocalStruggles(localStruggles.filter(i => i !== s));
-      else setLocalStruggles([...localStruggles, s]);
-    };
-
-    return (
-      <div className="space-y-6 pb-24 animate-fade-in">
-        <div className="flex items-center gap-2 mb-4">
-          <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800"><ArrowLeft size={20} className="text-gray-800 dark:text-stone-200" /></button>
-          <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Discussion Focus Areas</h2>
-        </div>
-
-        <div className="space-y-2">
-          {STRUGGLES.map((s) => {
-            const isSelected = localStruggles.includes(s);
-            return (
-              <button
-                key={s}
-                onClick={() => toggle(s)}
-                className={`w-full text-left p-3.5 rounded-xl transition-all border flex justify-between items-center text-xs ${isSelected
-                  ? 'bg-primary dark:bg-stone-800 text-white border-primary shadow-xs font-bold'
-                  : 'bg-white dark:bg-stone-900 border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200'
-                  }`}
-              >
-                <span>{s}</span>
-                {isSelected && <Check size={16} />}
-              </button>
-            );
-          })}
-        </div>
-        <Button onClick={() => { updateProfile('struggles', localStruggles); persistUserEdits({ struggles: localStruggles }); setProfileView('menu'); }}>Save Focus Areas</Button>
-      </div>
-    );
-  };
-
-  const renderInterestsEdit = () => {
-    const [localInterests, setLocalInterests] = useState(user.biblicalInterests || []);
-    const [customInterest, setCustomInterest] = useState('');
-
-    const toggle = (interest: string) => {
-      if (localInterests.includes(interest)) setLocalInterests(localInterests.filter(i => i !== interest));
-      else setLocalInterests([...localInterests, interest]);
-    };
-
-    const addCustomInterest = () => {
-      const trimmed = customInterest.trim();
-      if (trimmed && !localInterests.includes(trimmed)) {
-        setLocalInterests([...localInterests, trimmed]);
-        setCustomInterest('');
-      }
-    };
-
-    const removeInterest = (interest: string) => {
-      setLocalInterests(localInterests.filter(i => i !== interest));
-    };
-
-    const options = [
-      'Apologetics',
-      'Prayer Life',
-      'Marriage & Family',
-      'Identity in Christ',
-      'Faith & Mental Health',
-      'Biblical Interpretation',
-      'Deep Theology',
-      'Daily Devotionals',
-      'Christian Leadership',
-      'Other'
-    ];
-
-    const customInterestsList = localInterests.filter(i => !options.includes(i));
-
-    return (
-      <div className="space-y-6 pb-24 animate-fade-in">
-        <div className="flex items-center gap-2 mb-4">
-          <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800"><ArrowLeft size={20} className="text-gray-800 dark:text-stone-200" /></button>
-          <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Biblical Interests</h2>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2.5">
-          {options.map((opt) => {
-            const isSelected = localInterests.includes(opt);
-            return (
-              <button
-                key={opt}
-                onClick={() => toggle(opt)}
-                className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all ${isSelected
-                  ? 'bg-primary dark:bg-stone-800 text-white border-primary shadow-xs'
-                  : 'bg-white dark:bg-stone-900 border-gray-200 dark:border-stone-700 text-gray-700 dark:text-stone-200'
-                  }`}
-              >
-                {opt}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Custom Interest Input */}
-        <div className="space-y-2 pt-2">
-          <label className="block text-xs font-bold text-gray-500 dark:text-stone-400 uppercase tracking-wide mb-1">Add Custom Interest</label>
-          <div className="flex gap-2">
-            <input
-              value={customInterest}
-              onChange={e => setCustomInterest(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') addCustomInterest(); }}
-              placeholder="e.g., Worship Music, Church History"
-              className="flex-1 p-3 text-xs rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-gray-800 dark:text-stone-100 outline-none focus:border-primary"
-            />
-            <Button onClick={addCustomInterest}>Add</Button>
-          </div>
-        </div>
-
-        {/* Custom Interests as Removable Chips */}
-        {customInterestsList.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-2">
-            {customInterestsList.map(interest => (
-              <span key={interest} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 dark:bg-stone-950/60 text-primary dark:text-amber-300 rounded-full text-xs font-medium">
-                {interest}
-                <button onClick={() => removeInterest(interest)} className="hover:text-red-500 dark:hover:text-red-400 transition-colors">
-                  <X size={12} />
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
-
-        <Button onClick={() => { updateProfile('biblicalInterests', localInterests); persistUserEdits({ biblicalInterests: localInterests }); setProfileView('menu'); }}>Save Interests</Button>
-      </div>
-    );
-  };
-
   const renderPrayers = () => {
     const activePrayers = userPrayers.filter(p => !p.archived);
     const archivedPrayers = userPrayers.filter(p => p.archived);
@@ -893,10 +928,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
 
     return (
       <div className="space-y-6 pb-24 animate-fade-in">
-        <div className="flex items-center gap-2 mb-4">
-          <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800"><ArrowLeft size={20} className="text-gray-800 dark:text-stone-200" /></button>
-          <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">My Prayers</h2>
-        </div>
+      <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
+        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
+          <ArrowLeft size={16} />
+        </span>
+        Back to Profile
+      </button>
+      <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">My Prayers</h2>
 
         {activePrayers.length === 0 && archivedPrayers.length === 0 ? (
           <div className="bg-white dark:bg-stone-900 p-8 rounded-xl border border-gray-100 dark:border-stone-700/80 text-center space-y-3">
@@ -936,10 +974,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
 
   const renderNotificationsSettings = () => (
     <div className="space-y-6 pb-24 animate-fade-in">
-      <div className="flex items-center gap-2 mb-4">
-        <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800"><ArrowLeft size={20} className="text-gray-800 dark:text-stone-200" /></button>
-        <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Notifications</h2>
-      </div>
+      <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
+        <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
+          <ArrowLeft size={16} />
+        </span>
+        Back to Profile
+      </button>
+      <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Notifications</h2>
 
       <div className="bg-white dark:bg-stone-900 p-5 rounded-xl border border-gray-100 dark:border-stone-700 space-y-4 text-xs">
         <div className="flex justify-between items-center">
@@ -983,15 +1024,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
         {activeTab === 'profile' && (
           <>
             {profileView === 'menu' && renderProfileMenu()}
-            {profileView === 'edit-profile' && renderEditProfile()}
-            {profileView === 'location' && renderLocationEdit()}
-            {profileView === 'struggles' && renderStrugglesEdit()}
-            {profileView === 'interests' && renderInterestsEdit()}
+            {profileView === 'edit-profile' && <EditProfileView user={user} onBack={() => setProfileView('menu')} updateProfile={updateProfile} persistUserEdits={persistUserEdits} />}
+            {profileView === 'location' && <LocationEditView user={user} onBack={() => setProfileView('menu')} updateProfile={updateProfile} persistUserEdits={persistUserEdits} />}
+            {profileView === 'struggles' && <StrugglesEditView user={user} onBack={() => setProfileView('menu')} updateProfile={updateProfile} persistUserEdits={persistUserEdits} />}
+            {profileView === 'interests' && <InterestsEditView user={user} onBack={() => setProfileView('menu')} updateProfile={updateProfile} persistUserEdits={persistUserEdits} />}
             {profileView === 'prayers' && renderPrayers()}
             {profileView === 'notifications' && renderNotificationsSettings()}
             {profileView === 'account' && (
               <div className="space-y-4 pb-24">
-                <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800"><ArrowLeft size={20} className="text-gray-800 dark:text-stone-200" /></button>
+                <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
+                  <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
+                    <ArrowLeft size={16} />
+                  </span>
+                  Back to Profile
+                </button>
                 <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Account Privacy Settings</h2>
                 <div className="bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700 text-xs space-y-3">
                   <p className="text-gray-600 dark:text-stone-300">Your account data is private and encrypted. Group discussions are protected by moderation tools.</p>
@@ -1000,7 +1046,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, setUser, onLogout })
             )}
             {profileView === 'help' && (
               <div className="space-y-4 pb-24">
-                <button onClick={() => setProfileView('menu')} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-stone-800"><ArrowLeft size={20} className="text-gray-800 dark:text-stone-200" /></button>
+                <button onClick={() => setProfileView('menu')} className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-stone-300 hover:text-primary dark:hover:text-warm-amber transition mb-4">
+                  <span className="w-7 h-7 rounded-full bg-gray-100 dark:bg-stone-800 flex items-center justify-center">
+                    <ArrowLeft size={16} />
+                  </span>
+                  Back to Profile
+                </button>
                 <h2 className="font-serif text-xl text-primary dark:text-warm-amber font-bold">Help & Support</h2>
                 <div className="bg-white dark:bg-stone-900 p-4 rounded-xl border border-gray-100 dark:border-stone-700 text-xs space-y-2">
                   <p className="font-bold text-primary dark:text-warm-amber">How do group capacities work?</p>
